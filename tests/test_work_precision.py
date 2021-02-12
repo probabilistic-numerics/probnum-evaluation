@@ -1,4 +1,4 @@
-import pytest
+"""Tests for work-precision diagram tools."""
 
 import probnumeval as pneval
 
