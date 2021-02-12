@@ -29,6 +29,7 @@ disable = """
 bad-continuation,
 bad-whitespace,
 invalid-name,
+missing-function-docstring,
 """
 # Many more `disable`s are defined in `./tox.ini` on a per-module basis!
 
