@@ -1,5 +1,7 @@
 """Error measures for time-series problems."""
 
+import numpy as np
+
 
 def root_mean_square_error(sol, ref_sol, evalgrid):
     """Compute an approximation of the L2 error on some grid."""
