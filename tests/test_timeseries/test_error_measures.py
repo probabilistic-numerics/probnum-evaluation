@@ -23,7 +23,7 @@ def ref_sol():
 @pytest.fixture
 def evalgrid():
 
-    return np.linspace(0.0, 1)
+    return np.linspace(0.0, 1.0)
 
 
 def test_rmse(sol, ref_sol, evalgrid):
