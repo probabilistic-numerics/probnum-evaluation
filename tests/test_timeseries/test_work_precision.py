@@ -1,9 +1,9 @@
 """Tests for work-precision diagram tools."""
 
-import probnumeval as pneval
+import probnumeval.timeseries as ts
 
 
 def test_work_precision():
-    wp = pneval.WorkPrecision(algorithm=None)
+    wp = ts.WorkPrecision(algorithm=None)
     out = wp.evaluate(problem=None)
     assert isinstance(out, dict)
