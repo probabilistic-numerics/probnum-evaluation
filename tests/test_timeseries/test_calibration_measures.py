@@ -1,3 +1,4 @@
+"""Tests for calibration measure functions."""
 import pytest
 
 from probnumeval.timeseries import (

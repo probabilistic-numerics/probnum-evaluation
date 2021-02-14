@@ -1,3 +1,4 @@
+"""Tests for error measure functions."""
 import numpy as np
 import pytest
 

@@ -1,3 +1,4 @@
+"""Tests for sample analysis functions."""
 import pytest
 
 from probnumeval.timeseries import intersample_rmse, normaltest
