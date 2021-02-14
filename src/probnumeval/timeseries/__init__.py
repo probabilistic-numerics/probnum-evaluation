@@ -1,6 +1,11 @@
 """Work-precision diagrams and calibration analysis for time series problems.
 
 Applicable to (O)DE solvers, filters, smoothers, and more.
+
+Some sources:
+http://folk.ntnu.no/skoge/prost/proceedings/ifac2002/data/content/02779/2779.pdf
+https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
+https://arxiv.org/pdf/2012.08202.pdf
 """
 
 
