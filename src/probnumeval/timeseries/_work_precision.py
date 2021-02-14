@@ -69,15 +69,3 @@ class WorkPrecision:
             )
 
         return results
-
-
-def compute_rmse(sol, ref_sol, evalgrid):
-    out = sol(evalgrid)
-    ref = ref_sol(evalgrid)
-    return np.linalg.norm(out - ref) / np.sqrt(ref.size)
-
-
-def compute_final_time(sol, ref_sol, evalgrid):
-    out = sol(evalgrid[-1])
-    ref = ref_sol(evalgrid[-1])
-    return np.linalg.norm(out - ref) / np.sqrt(ref.size)
