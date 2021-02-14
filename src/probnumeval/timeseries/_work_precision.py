@@ -42,9 +42,9 @@ class WorkPrecision:
     4.1e-05 1.3e-06 1.4e-08 1.4e-10
     """
 
-    def __init__(self, algorithm, ref_sol, evalgrid):
+    def __init__(self, simulator, ref_sol, evalgrid):
 
-        self.algorithm = algorithm
+        self.simulator = simulator
         self.ref_sol = ref_sol
         self.evalgrid = evalgrid
 
@@ -56,11 +56,13 @@ class WorkPrecision:
         for par in parameters:
             results[parameter_key].append(par)
 
+            # Wall time measures
             start_time = time.time()
-            sol = self.algorithm(par)
+            sol = self.simulator(par)
             end_time = time.time()
             results["wall_time_sec"].append(end_time - start_time)
 
+            # Error measures
             results["rmse"].append(compute_rmse(sol, self.ref_sol, self.evalgrid))
             results["final_time"].append(
                 compute_final_time(sol, self.ref_sol, self.evalgrid)
