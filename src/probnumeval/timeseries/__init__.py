@@ -17,7 +17,11 @@ from ._calibration_measures import (
     non_credibility_index3,
 )
 from ._error_measures import final_time_error, max_error, root_mean_square_error
-from ._sample_analysis import intersample_rmse, normaltest
+from ._sample_analysis import (
+    average_intersample_rmse,
+    average_rmse,
+    gaussianity_p_value,
+)
 
 __all__ = [
     "root_mean_square_error",
@@ -28,6 +32,7 @@ __all__ = [
     "non_credibility_index",
     "non_credibility_index2",
     "non_credibility_index3",
-    "normaltest",
-    "intersample_rmse",
+    "gaussianity_p_value",
+    "average_rmse",
+    "average_intersample_rmse",
 ]

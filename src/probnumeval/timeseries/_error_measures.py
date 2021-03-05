@@ -2,6 +2,8 @@
 
 import numpy as np
 
+__all__ = ["root_mean_square_error", "final_time_error", "max_error"]
+
 
 def root_mean_square_error(sol, ref_sol, evalgrid):
     """Compute an approximation of the L2 error on some grid."""

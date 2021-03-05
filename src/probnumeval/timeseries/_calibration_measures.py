@@ -9,8 +9,15 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 
 import scipy.stats
 
+__all__ = [
+    "average_normalised_estimation_error_squared",
+    "chi2_confidence_intervals",
+    "non_credibility_index",
+    "non_credibility_index2",
+    "non_credibility_index3",
+]
 
-# aka chi2 test
+
 def average_normalised_estimation_error_squared(sol, ref_sol, evalgrid):
     """Compute the average normalised estimation error squared.
 
