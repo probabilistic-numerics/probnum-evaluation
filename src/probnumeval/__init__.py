@@ -3,9 +3,7 @@
 
 from pkg_resources import DistributionNotFound, get_distribution
 
-
 from . import timeseries
-
 
 try:
     # Change here if project is renamed and does not equal the package name
