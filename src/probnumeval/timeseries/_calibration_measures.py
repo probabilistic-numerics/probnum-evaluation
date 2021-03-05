@@ -12,10 +12,15 @@ import scipy.stats
 
 # aka chi2 test
 def average_normalised_estimation_error_squared(sol, ref_sol, evalgrid):
+    """Compute the average normalised estimation error squared.
+
+    Also known as chi-squared statistic.
+    """
     raise NotImplementedError
 
 
 def chi2_confidence_intervals(dim, perc=0.99):
+    """Easily access the confidence intervals of a chi-squared RV."""
     delta = (1.0 - perc) / 2.0
     lower = scipy.stats.chi2(df=dim).ppf(delta)
     upper = scipy.stats.chi2(df=dim).ppf(1 - delta)
@@ -23,12 +28,15 @@ def chi2_confidence_intervals(dim, perc=0.99):
 
 
 def non_credibility_index(sol, ref_sol, evalgrid):
+    """Compute the non-credibility index."""
     raise NotImplementedError
 
 
 def non_credibility_index2(sol, ref_sol, evalgrid):
+    """Compute a variant of the non-credibility index."""
     raise NotImplementedError
 
 
 def non_credibility_index3(sol, ref_sol, evalgrid):
+    """Compute a variant of the non-credibility index."""
     raise NotImplementedError
