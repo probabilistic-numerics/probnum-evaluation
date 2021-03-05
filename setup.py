@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-    Setup file for probnum.
-    Use setup.cfg to configure the project.
+"""Setup file for probnum-evaluation.
+
+Use setup.cfg to configure the project.
 """
 import sys
 
