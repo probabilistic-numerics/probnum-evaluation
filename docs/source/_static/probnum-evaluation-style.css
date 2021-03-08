@@ -1,8 +1,8 @@
 /* Color variables */
 :root {
-  --pn-green: #107d79;
-  --pn-lightgreen: #e9f4f4;
-  --pn-brightgreen: #16b3ad;
+  --pn-steelblue: #4682b4;
+  --pn-lightsteelblue: #e2e9f2;
+  --pn-brightsteelblue: #3883c2;
   --pn-orange: #ff9933;
   --pn-darkred: #820000;
   --pn-darkgray: #333333;
@@ -26,14 +26,14 @@ body {
   max-width: 1000px;
 }
 .wy-nav-content a:visited {
-	color: var(--pn-green);
+	color: var(--pn-steelblue);
 }
 
 /* Sidebar */
 
 /* Logo area */
 .wy-nav-top {
-	background: var(--pn-green);
+	background: var(--pn-steelblue);
 }
 .wy-nav-side {
 	background: var(--pn-darkgray);
@@ -48,24 +48,24 @@ body {
 }
 /* Sidebar headers */
 .wy-menu-vertical header, .wy-menu-vertical p.caption {
-	color: var(--pn-brightgreen);
+	color: var(--pn-brightsteelblue);
 }
 /* Sidebar links */
 .wy-menu-vertical a:active {
-	background-color: var(--pn-green);
+	background-color: var(--pn-steelblue);
 }
 .wy-menu-vertical a:hover {
-	color: var(--pn-brightgreen);
+	color: var(--pn-brightsteelblue);
 }
 
 /* Hyperlinks */
 a {
-    color: var(--pn-green);
+    color: var(--pn-steelblue);
     text-decoration: none;
 }
 
 a:hover {
-    color: var(--pn-green);
+    color: var(--pn-steelblue);
     text-decoration: underline;
 }
 
@@ -74,7 +74,7 @@ a:hover {
     color: var(--pn-darkgray);
 }
 .rst-content .viewcode-link {
-	color: -var(--pn-green);
+	color: -var(--pn-steelblue);
 }
 
 /* Code block */
@@ -84,9 +84,9 @@ a:hover {
 
 /* Code inline */
 .rst-content code.literal, .rst-content tt.literal{
-    color: var(--pn-green);
+    color: var(--pn-steelblue);
     padding: 1px 2px;
-		background-color: var(--pn-lightgreen);
+		background-color: var(--pn-lightsteelblue);
 		border-radius: 4px;
 }
 
@@ -120,7 +120,7 @@ div.sphx-glr-thumbcontainer {
 }
 div.sphx-glr-thumbcontainer:hover {
     box-shadow: 0 0 10px #107d7930;
-    border: solid var(--pn-green) 1px;
+    border: solid var(--pn-steelblue) 1px;
 }
 
 /* Plot animations */
@@ -152,7 +152,7 @@ div.sphx-glr-thumbcontainer:hover {
 }
 
 .rst-versions .rst-current-version {
-	color: var(--pn-brightgreen);
+	color: var(--pn-brightsteelblue);
 }
 
 .keep-us-sustainable {
