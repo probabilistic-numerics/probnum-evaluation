@@ -18,9 +18,9 @@ from ._calibration_measures import (
 )
 from ._error_measures import final_time_error, max_error, root_mean_square_error
 from ._sample_analysis import (
-    average_intersample_rmse,
-    average_rmse,
     gaussianity_p_value,
+    sample_reference_distance,
+    sample_sample_distance,
 )
 
 __all__ = [
@@ -33,6 +33,6 @@ __all__ = [
     "non_credibility_index2",
     "non_credibility_index3",
     "gaussianity_p_value",
-    "average_rmse",
-    "average_intersample_rmse",
+    "sample_reference_distance",
+    "sample_sample_distance",
 ]
