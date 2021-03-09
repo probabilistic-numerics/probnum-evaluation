@@ -1,23 +1,37 @@
 """Tests for sample analysis functions."""
+import numpy as np
 import pytest
 
 from probnumeval.timeseries import (
-    average_intersample_rmse,
-    average_rmse,
     gaussianity_p_value,
+    sample_reference_distance,
+    sample_sample_distance,
 )
 
 
-def test_average_intersample_rmse():
-    with pytest.raises(NotImplementedError):
-        average_intersample_rmse(None)
+@pytest.fixture
+def fake_samples():
+    return np.random.rand(100, 3)
 
 
-def test_average_rmse():
-    with pytest.raises(NotImplementedError):
-        average_rmse(None, None)
+@pytest.fixture
+def fake_reference():
+    return np.random.rand(3)
 
 
-def test_normaltest():
+@pytest.mark.parametrize("p", [1, 2, np.inf])
+def test_sample_sample_distance(fake_samples, p):
+
+    ssdist = sample_sample_distance(fake_samples, p=p)
+    np.testing.assert_allclose(ssdist.shape, (100,))
+
+
+@pytest.mark.parametrize("p", [1, 2, np.inf])
+def test_sample_reference_distance(fake_samples, fake_reference, p):
+    srdist = sample_reference_distance(fake_samples, fake_reference, p=p)
+    np.testing.assert_allclose(srdist.shape, (100,))
+
+
+def test_gaussianity_p_value():
     with pytest.raises(NotImplementedError):
         gaussianity_p_value(None)
