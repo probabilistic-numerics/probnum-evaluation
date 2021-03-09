@@ -21,7 +21,6 @@ def fake_reference():
 
 @pytest.mark.parametrize("p", [1, 2, np.inf])
 def test_sample_sample_distance(fake_samples, p):
-    """bla."""
     ssdist = sample_sample_distance(fake_samples, p=p)
     np.testing.assert_allclose(ssdist.shape, (100,))
 
