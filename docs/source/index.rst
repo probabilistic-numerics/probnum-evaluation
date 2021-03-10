@@ -27,6 +27,7 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    :caption: Tutorials
 
    tutorials/animate_gaussian_distributions
+   tutorials/animate_gauss_markov_posterior
 
 
 .. toctree::
