@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=False):
+def animate_with_periodic_gp(d, num_frames, base_measure_sample=None, endpoint=False):
     """Animate samples from a standard Normal distribution by drawing samples from a
     periodic Gaussian process.
 
@@ -11,11 +11,11 @@ def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=Fa
     ----------
     d :
         Dimension of the underlying multivariate Normal distribution of which samples shall be animated.
-    num_steps :
+    num_frames :
         Number of steps to be taken. This can be thought of the number of frames
         in the final animation.
     base_measure_sample:
-        **Shape (d, num_steps).**
+        **Shape (num_steps, d).**
         I.i.d. samples from a standard Normal distribution.
     endpoint
         Whether the final state should be equal to the first state. Optional. Default is False.
@@ -31,8 +31,8 @@ def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=Fa
     --------
     >>> import numpy as np
     >>> np.random.seed(42)
-    >>> dim, num_steps = 2, 10
-    >>> states = animate_with_periodic_gp(dim, num_steps)
+    >>> dim, num_frames = 2, 10
+    >>> states = animate_with_periodic_gp(dim, num_frames)
     >>> print(np.round(states, 1))
     [[ 0.5 -0.5]
      [ 0.3 -0.7]
@@ -53,27 +53,27 @@ def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=Fa
     unit_sample = (
         base_measure_sample
         if base_measure_sample is not None
-        else np.random.randn(d, num_steps)
+        else np.random.randn(num_frames, d)
     )
 
-    equispaced_distances = np.linspace(0, 2 * np.pi, num_steps, endpoint=endpoint)
+    equispaced_distances = np.linspace(0, 2 * np.pi, num_frames, endpoint=endpoint)
     m = np.zeros(len(equispaced_distances))
     K = k(equispaced_distances[:, None], equispaced_distances[None, :])
 
     # Transform "from the right", because unit_sample is shape (d, num_steps)
     damping_factor = 1e-12
     KS = np.linalg.cholesky(K + damping_factor * np.eye(len(K)))
-    samples = unit_sample @ KS.T + m[None, :]
-    return samples.T
+    samples = m[:, None] + KS @ unit_sample
+    return samples
 
 
-def animate_with_random_great_circle_of_unitsphere(
-    d, num_steps, initial_sample=None, initial_direction=None, endpoint=False
+def animate_with_great_circle_of_unitsphere(
+    d, num_frames, initial_sample=None, initial_direction=None, endpoint=False
 ):
     """Animate samples from a standard Normal distribution by drawing a great circle on
     a unitsphere uniformly at random.
 
-    Based on the MATLAB implementation in [1].
+    Based on the MATLAB implementation in [1]_.
 
     This can be used to "make a sample from a GP move around in the sample space".
     In this case, d is the number of time-grid points
@@ -85,7 +85,7 @@ def animate_with_random_great_circle_of_unitsphere(
     d :
         Dimension of the sphere. This can be thought of as the dimension of the
         underlying multivariate Normal distribution of which samples shall be animated.
-    num_steps :
+    num_frames :
         Number of steps to be taken. This can be thought of the number of frames
         in the final animation.
     initial_sample:
@@ -116,8 +116,8 @@ def animate_with_random_great_circle_of_unitsphere(
     --------
     >>> import numpy as np
     >>> np.random.seed(42)
-    >>> dim, num_steps = 2, 10
-    >>> states = animate_with_random_great_circle_of_unitsphere(dim, num_steps)
+    >>> dim, num_frames = 2, 10
+    >>> states = animate_with_random_great_circle_of_unitsphere(dim, num_frames)
     >>> print(np.round(states, 1))
     [[ 0.5 -0.1]
      [ 0.5  0.2]
@@ -145,7 +145,7 @@ def animate_with_random_great_circle_of_unitsphere(
     orthonormal_direction = orthogonal_direction / np.linalg.norm(orthogonal_direction)
 
     # Compute great circle
-    equispaced_distances = np.linspace(0, 2.0 * np.pi, num_steps, endpoint=endpoint)
+    equispaced_distances = np.linspace(0, 2.0 * np.pi, num_frames, endpoint=endpoint)
     states = np.array(
         [
             scale * geodesic_sphere(normalized_state, orthonormal_direction * delta)
@@ -168,11 +168,11 @@ def geodesic_sphere(point, velocity):
 
     # Decompose the velocity into magnitude * direction
     magnitude = np.linalg.norm(velocity)
-    direction = velocity / magnitude
-
     # Early exit if no proper direction is given
     if magnitude == 0.0:
         return point
+
+    direction = velocity / magnitude
 
     geodesic = np.cos(magnitude) * point + np.sin(magnitude) * direction
     return geodesic

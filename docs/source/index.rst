@@ -22,6 +22,13 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    public_api/visual
 
 
+.. nbgallery::
+   :maxdepth: 1
+   :caption: Tutorials
+
+   tutorials/animate_gaussian_distributions
+
+
 .. toctree::
    :maxdepth: 1
    :caption: Other
