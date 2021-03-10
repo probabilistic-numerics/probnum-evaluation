@@ -4,7 +4,7 @@ import numpy as np
 
 
 def random_great_circle_of_unitsphere(
-    d, num_steps, initial_sample=None, initial_direction=None
+    d, num_steps, initial_sample=None, initial_direction=None, endpoint=False
 ):
     """Draw a great circle on a unitsphere uniformly at random.
 
@@ -31,6 +31,9 @@ def random_great_circle_of_unitsphere(
         **Shape (d,).**
         Initial direction on the tangent space of the initial sample. Will be orthonormalized internally.
         Optional. If not provided, sampled from a standard Normal distribution.
+    endpoint
+        Whether the final state should be equal to the first state. Optional. Default is False.
+
 
     Returns
     -------
@@ -49,17 +52,17 @@ def random_great_circle_of_unitsphere(
     >>> import numpy as np
     >>> np.random.seed(42)
     >>> dim, num_steps = 2, 10
-    >>> initial_sample = np.random.randn(2, 1)
-    >>> initial_direction = np.random.randn(2, 1)
+    >>> initial_sample = np.random.randn(2)
+    >>> initial_direction = np.random.randn(2)
     >>> out = random_great_circle_of_unitsphere(dim, num_steps, initial_sample, initial_direction)
     >>> print(np.round(out, 1))
     [[ 0.5  0.5  0.3 -0.  -0.3 -0.5 -0.5 -0.3  0.   0.3]
      [-0.1  0.2  0.4  0.5  0.4  0.1 -0.2 -0.4 -0.5 -0.4]]
     """
     # Read inputs
-    state = initial_sample if initial_sample is not None else np.random.randn(d, 1)
+    state = initial_sample if initial_sample is not None else np.random.randn(d)
     direction = (
-        initial_direction if initial_direction is not None else np.random.randn(d, 1)
+        initial_direction if initial_direction is not None else np.random.randn(d)
     )
 
     # Normalize and orthogonalize
@@ -71,14 +74,14 @@ def random_great_circle_of_unitsphere(
     orthonormal_direction = orthogonal_direction / np.linalg.norm(orthogonal_direction)
 
     # Compute great circle
-    equispaced_distances = np.linspace(0, 2.0 * np.pi, num_steps + 1)[:-1]
-    out = np.array(
+    equispaced_distances = np.linspace(0, 2.0 * np.pi, num_steps, endpoint=endpoint)
+    untransposed_states = np.array(
         [
-            scale * _geodesic_sphere(normalized_state, orthonormal_direction * delta)
+            scale * geodesic_sphere(normalized_state, orthonormal_direction * delta)
             for delta in equispaced_distances
         ]
     )
-    return out[:, :, 0].T
+    return untransposed_states.T
 
 
 def geodesic_sphere(point, velocity):
@@ -89,6 +92,7 @@ def geodesic_sphere(point, velocity):
     .. math:: \gamma(t) := \text{Exp}_p(v t) = \cos(\|v\| t) p + \sin(\|v\| t) \frac{v}{\|v\|}
 
     and can be used to compute a great circle on a sphere.
+    The dimension of the sphere is read off the sizes of point and velocity.
     """
 
     # Decompose the velocity into magnitude * direction
@@ -101,3 +105,37 @@ def geodesic_sphere(point, velocity):
 
     geodesic = np.cos(magnitude) * point + np.sin(magnitude) * direction
     return geodesic
+
+
+def periodic_states(d, num_steps, base_measure_sample=None, endpoint=False):
+    """
+    Examples
+    --------
+
+    >>> import numpy as np
+    >>> np.random.seed(42)
+    >>> dim, num_steps = 2, 10
+    >>> out = periodic_states(dim, num_steps)
+    >>> print(np.round(out, 1))
+    [[ 0.5  0.3  0.6  1.6  1.1  0.5  0.3  0.6  1.6  1.1]
+     [-0.5 -0.7 -0.3 -1.3 -1.8 -0.5 -0.7 -0.3 -1.3 -1.8]]
+    """
+
+    def k(t1, t2):
+        return np.exp(-np.sin(np.abs(t1 - t2)) ** 2)
+
+    unit_sample = (
+        base_measure_sample
+        if base_measure_sample is not None
+        else np.random.randn(d, num_steps)
+    )
+
+    equispaced_distances = np.linspace(0, 2 * np.pi, num_steps, endpoint=endpoint)
+    m = np.zeros(len(equispaced_distances))
+    K = k(equispaced_distances[:, None], equispaced_distances[None, :])
+
+    # Transform "from the right", because unit_sample is shape (d, num_steps)
+    damping_factor = 1e-12
+    KS = np.linalg.cholesky(K + damping_factor * np.eye(len(K)))
+    samples = unit_sample @ KS.T + m[None, :]
+    return samples
