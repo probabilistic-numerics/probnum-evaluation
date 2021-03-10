@@ -142,6 +142,7 @@ def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=Fa
     """
 
     def k(t1, t2):
+        """Periodic covariance kernel."""
         return np.exp(-np.sin(np.abs(t1 - t2)) ** 2)
 
     unit_sample = (
