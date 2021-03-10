@@ -3,10 +3,11 @@
 import numpy as np
 
 
-def random_great_circle_of_unitsphere(
+def animate_with_random_great_circle_of_unitsphere(
     d, num_steps, initial_sample=None, initial_direction=None, endpoint=False
 ):
-    """Draw a great circle on a unitsphere uniformly at random.
+    """Animate samples from a standard Normal distribution by drawing a great circle on
+    a unitsphere uniformly at random.
 
     Based on the MATLAB implementation in [1].
 
@@ -52,10 +53,8 @@ def random_great_circle_of_unitsphere(
     >>> import numpy as np
     >>> np.random.seed(42)
     >>> dim, num_steps = 2, 10
-    >>> initial_sample = np.random.randn(2)
-    >>> initial_direction = np.random.randn(2)
-    >>> out = random_great_circle_of_unitsphere(dim, num_steps, initial_sample, initial_direction)
-    >>> print(np.round(out, 1))
+    >>> states = animate_with_random_great_circle_of_unitsphere(dim, num_steps)
+    >>> print(np.round(states, 1))
     [[ 0.5  0.5  0.3 -0.  -0.3 -0.5 -0.5 -0.3  0.   0.3]
      [-0.1  0.2  0.4  0.5  0.4  0.1 -0.2 -0.4 -0.5 -0.4]]
     """
@@ -107,16 +106,37 @@ def geodesic_sphere(point, velocity):
     return geodesic
 
 
-def periodic_states(d, num_steps, base_measure_sample=None, endpoint=False):
-    """
+def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=False):
+    """Animate samples from a standard Normal distribution by drawing samples from a
+    periodic Gaussian process.
+
+    Parameters
+    ----------
+    d :
+        Dimension of the underlying multivariate Normal distribution of which samples shall be animated.
+    num_steps :
+        Number of steps to be taken. This can be thought of the number of frames
+        in the final animation.
+    base_measure_sample:
+        **Shape (d, num_steps).**
+        I.i.d. samples from a standard Normal distribution.
+    endpoint
+        Whether the final state should be equal to the first state. Optional. Default is False.
+
+
+    Returns
+    -------
+    np.ndarray
+        **Shape (d, num_steps).**
+        N steps that traverse the sphere along a (d-1)-dimensional subspace.
+
     Examples
     --------
-
     >>> import numpy as np
     >>> np.random.seed(42)
     >>> dim, num_steps = 2, 10
-    >>> out = periodic_states(dim, num_steps)
-    >>> print(np.round(out, 1))
+    >>> states = animate_with_periodic_gp(dim, num_steps)
+    >>> print(np.round(states, 1))
     [[ 0.5  0.3  0.6  1.6  1.1  0.5  0.3  0.6  1.6  1.1]
      [-0.5 -0.7 -0.3 -1.3 -1.8 -0.5 -0.7 -0.3 -1.3 -1.8]]
     """
