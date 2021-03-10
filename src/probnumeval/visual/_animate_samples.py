@@ -3,6 +3,70 @@
 import numpy as np
 
 
+def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=False):
+    """Animate samples from a standard Normal distribution by drawing samples from a
+    periodic Gaussian process.
+
+    Parameters
+    ----------
+    d :
+        Dimension of the underlying multivariate Normal distribution of which samples shall be animated.
+    num_steps :
+        Number of steps to be taken. This can be thought of the number of frames
+        in the final animation.
+    base_measure_sample:
+        **Shape (d, num_steps).**
+        I.i.d. samples from a standard Normal distribution.
+    endpoint
+        Whether the final state should be equal to the first state. Optional. Default is False.
+
+
+    Returns
+    -------
+    np.ndarray
+        **Shape (num_steps, d).**
+        N steps that traverse the sphere along a (d-1)-dimensional subspace.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> np.random.seed(42)
+    >>> dim, num_steps = 2, 10
+    >>> states = animate_with_periodic_gp(dim, num_steps)
+    >>> print(np.round(states, 1))
+    [[ 0.5 -0.5]
+     [ 0.3 -0.7]
+     [ 0.6 -0.3]
+     [ 1.6 -1.3]
+     [ 1.1 -1.8]
+     [ 0.5 -0.5]
+     [ 0.3 -0.7]
+     [ 0.6 -0.3]
+     [ 1.6 -1.3]
+     [ 1.1 -1.8]]
+    """
+
+    def k(t1, t2):
+        """Periodic covariance kernel."""
+        return np.exp(-np.sin(np.abs(t1 - t2)) ** 2)
+
+    unit_sample = (
+        base_measure_sample
+        if base_measure_sample is not None
+        else np.random.randn(d, num_steps)
+    )
+
+    equispaced_distances = np.linspace(0, 2 * np.pi, num_steps, endpoint=endpoint)
+    m = np.zeros(len(equispaced_distances))
+    K = k(equispaced_distances[:, None], equispaced_distances[None, :])
+
+    # Transform "from the right", because unit_sample is shape (d, num_steps)
+    damping_factor = 1e-12
+    KS = np.linalg.cholesky(K + damping_factor * np.eye(len(K)))
+    samples = unit_sample @ KS.T + m[None, :]
+    return samples.T
+
+
 def animate_with_random_great_circle_of_unitsphere(
     d, num_steps, initial_sample=None, initial_direction=None, endpoint=False
 ):
@@ -39,7 +103,7 @@ def animate_with_random_great_circle_of_unitsphere(
     Returns
     -------
     np.ndarray
-        **Shape (d, num_steps).**
+        **Shape (num_steps, d).**
         N steps that traverse the sphere along a (d-1)-dimensional subspace.
 
     References
@@ -55,8 +119,16 @@ def animate_with_random_great_circle_of_unitsphere(
     >>> dim, num_steps = 2, 10
     >>> states = animate_with_random_great_circle_of_unitsphere(dim, num_steps)
     >>> print(np.round(states, 1))
-    [[ 0.5  0.5  0.3 -0.  -0.3 -0.5 -0.5 -0.3  0.   0.3]
-     [-0.1  0.2  0.4  0.5  0.4  0.1 -0.2 -0.4 -0.5 -0.4]]
+    [[ 0.5 -0.1]
+     [ 0.5  0.2]
+     [ 0.3  0.4]
+     [-0.   0.5]
+     [-0.3  0.4]
+     [-0.5  0.1]
+     [-0.5 -0.2]
+     [-0.3 -0.4]
+     [ 0.  -0.5]
+     [ 0.3 -0.4]]
     """
     # Read inputs
     state = initial_sample if initial_sample is not None else np.random.randn(d)
@@ -74,13 +146,13 @@ def animate_with_random_great_circle_of_unitsphere(
 
     # Compute great circle
     equispaced_distances = np.linspace(0, 2.0 * np.pi, num_steps, endpoint=endpoint)
-    untransposed_states = np.array(
+    states = np.array(
         [
             scale * geodesic_sphere(normalized_state, orthonormal_direction * delta)
             for delta in equispaced_distances
         ]
     )
-    return untransposed_states.T
+    return states
 
 
 def geodesic_sphere(point, velocity):
@@ -104,59 +176,3 @@ def geodesic_sphere(point, velocity):
 
     geodesic = np.cos(magnitude) * point + np.sin(magnitude) * direction
     return geodesic
-
-
-def animate_with_periodic_gp(d, num_steps, base_measure_sample=None, endpoint=False):
-    """Animate samples from a standard Normal distribution by drawing samples from a
-    periodic Gaussian process.
-
-    Parameters
-    ----------
-    d :
-        Dimension of the underlying multivariate Normal distribution of which samples shall be animated.
-    num_steps :
-        Number of steps to be taken. This can be thought of the number of frames
-        in the final animation.
-    base_measure_sample:
-        **Shape (d, num_steps).**
-        I.i.d. samples from a standard Normal distribution.
-    endpoint
-        Whether the final state should be equal to the first state. Optional. Default is False.
-
-
-    Returns
-    -------
-    np.ndarray
-        **Shape (d, num_steps).**
-        N steps that traverse the sphere along a (d-1)-dimensional subspace.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> np.random.seed(42)
-    >>> dim, num_steps = 2, 10
-    >>> states = animate_with_periodic_gp(dim, num_steps)
-    >>> print(np.round(states, 1))
-    [[ 0.5  0.3  0.6  1.6  1.1  0.5  0.3  0.6  1.6  1.1]
-     [-0.5 -0.7 -0.3 -1.3 -1.8 -0.5 -0.7 -0.3 -1.3 -1.8]]
-    """
-
-    def k(t1, t2):
-        """Periodic covariance kernel."""
-        return np.exp(-np.sin(np.abs(t1 - t2)) ** 2)
-
-    unit_sample = (
-        base_measure_sample
-        if base_measure_sample is not None
-        else np.random.randn(d, num_steps)
-    )
-
-    equispaced_distances = np.linspace(0, 2 * np.pi, num_steps, endpoint=endpoint)
-    m = np.zeros(len(equispaced_distances))
-    K = k(equispaced_distances[:, None], equispaced_distances[None, :])
-
-    # Transform "from the right", because unit_sample is shape (d, num_steps)
-    damping_factor = 1e-12
-    KS = np.linalg.cholesky(K + damping_factor * np.eye(len(K)))
-    samples = unit_sample @ KS.T + m[None, :]
-    return samples
