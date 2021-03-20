@@ -25,9 +25,20 @@ def average_normalized_estimation_error_squared(
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
-    """Compute the average normalised estimation error squared.
+    r"""Compute the average normalised estimation error squared.
 
-    Also known as chi-squared statistic.
+    Also known as chi-squared statistic. It computes
+
+    .. math:: \chi^2 :=
+        \frac{1}{N + 1}
+        \sum_{n=0}^N
+        (y^*(t_n) - \mathbb{E}[y(t_n)])^\top
+        \mathbb{C}[y(t_n)]^{-1}
+        (y^*(t_n) - \mathbb{E}[y(t_n)])
+
+    where :math:`\mathbb{E}` is the mean and :math:`\mathbb{C}` is the covariance.
+    If :math:`y` is a Gaussian process, :math:`\chi^2` follows a chi-squared distribution.
+
 
     Parameters
     ----------
@@ -39,6 +50,10 @@ def average_normalized_estimation_error_squared(
         computed with a non-probabilistic algorithm.)
     locations :
         Set of locations on which to evaluate the statistic.
+
+    Returns
+    -------
+    ANEES statistic (i.e. :math:`\chi^2` above).
     """
     # Evaluate the posteriors.
     approximate_evaluation = approximate_solution(locations)
