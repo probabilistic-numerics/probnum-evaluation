@@ -11,7 +11,6 @@ from typing import Callable
 
 import numpy as np
 import scipy.stats
-from probnum import filtsmooth
 
 __all__ = [
     "average_normalized_estimation_error_squared",
@@ -21,7 +20,7 @@ __all__ = [
 
 
 def average_normalized_estimation_error_squared(
-    approximate_solution: filtsmooth.FiltSmoothPosterior,
+    approximate_solution,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
@@ -43,7 +42,7 @@ def average_normalized_estimation_error_squared(
     Parameters
     ----------
     approximate_solution :
-        Approximate solution as returned by a Kalman filter or ODE solver.
+        Approximate solution as returned by a Kalman filter or ODE solver. This must be a `FiltSmoothPosterior`.
     reference_solution :
         Reference solution. (This is not assumed to be a `TimeSeriesPosterior`, because
         ideally this is the true solution of a problem; often, it is a reference solution
@@ -66,7 +65,7 @@ def average_normalized_estimation_error_squared(
 
 
 def non_credibility_index(
-    approximate_solution: filtsmooth.FiltSmoothPosterior,
+    approximate_solution,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
