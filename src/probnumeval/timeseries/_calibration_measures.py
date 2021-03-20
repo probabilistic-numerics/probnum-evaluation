@@ -17,8 +17,6 @@ __all__ = [
     "average_normalized_estimation_error_squared",
     "chi2_confidence_intervals",
     "non_credibility_index",
-    "non_credibility_index2",
-    "non_credibility_index3",
 ]
 
 
@@ -84,21 +82,3 @@ def non_credibility_index(
     final2 = np.einsum("nd,nd->n", intermediate2, centered_mean)
 
     return 10 * (np.log10(final1).mean(axis=0) - np.log10(final2).mean(axis=0))
-
-
-def non_credibility_index2(
-    approximate_solution: pn.filtsmooth.TimeSeriesPosterior,
-    reference_solution: Callable[[np.ndarray], np.ndarray],
-    locations: np.ndarray,
-):
-    """Compute a variant of the non-credibility index."""
-    raise NotImplementedError
-
-
-def non_credibility_index3(
-    approximate_solution: pn.filtsmooth.TimeSeriesPosterior,
-    reference_solution: Callable[[np.ndarray], np.ndarray],
-    locations: np.ndarray,
-):
-    """Compute a variant of the non-credibility index."""
-    raise NotImplementedError

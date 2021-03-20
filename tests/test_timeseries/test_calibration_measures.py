@@ -7,8 +7,6 @@ from probnumeval.timeseries import (
     average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
     non_credibility_index,
-    non_credibility_index2,
-    non_credibility_index3,
 )
 
 
@@ -60,13 +58,3 @@ def test_anees(kalpost, refsol, grid):
 def test_nci(kalpost, refsol, grid):
     output = non_credibility_index(kalpost, refsol, grid)
     assert np.isscalar(output)
-
-
-def test_nci2():
-    with pytest.raises(NotImplementedError):
-        non_credibility_index2(None, None, None)
-
-
-def test_nci3():
-    with pytest.raises(NotImplementedError):
-        non_credibility_index3(None, None, None)

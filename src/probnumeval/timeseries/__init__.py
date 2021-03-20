@@ -13,8 +13,6 @@ from ._calibration_measures import (
     average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
     non_credibility_index,
-    non_credibility_index2,
-    non_credibility_index3,
 )
 from ._error_measures import final_time_error, max_error, root_mean_square_error
 from ._sample_analysis import (
@@ -30,8 +28,6 @@ __all__ = [
     "average_normalized_estimation_error_squared",
     "chi2_confidence_intervals",
     "non_credibility_index",
-    "non_credibility_index2",
-    "non_credibility_index3",
     "gaussianity_p_value",
     "sample_reference_distance",
     "sample_sample_distance",
