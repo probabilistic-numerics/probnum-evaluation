@@ -5,7 +5,7 @@ from typing import Callable
 import numpy as np
 from probnum import filtsmooth
 
-__all__ = ["ApproximateSolutionType", "ReferenceSolutionType"]
+__all__ = ["ProbabilisticSolutionType", "DeterministicSolutionType"]
 
 ProbabilisticSolutionType = filtsmooth.FiltSmoothPosterior
 
