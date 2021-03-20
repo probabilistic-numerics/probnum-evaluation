@@ -37,7 +37,10 @@ def average_normalized_estimation_error_squared(
 
     where :math:`\mathbb{E}` is the mean and :math:`\mathbb{C}` is the covariance.
     If :math:`y` is a Gaussian process, :math:`\chi^2` follows a chi-squared distribution.
+    For a :math:`d` dimensional solution, the outcome is
 
+    - **Underconfident** if :math:`\chi^2 < d` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\chi^2 > d` holds. The estimated error is way smaller than the actual error.
 
     Parameters
     ----------
@@ -53,6 +56,14 @@ def average_normalized_estimation_error_squared(
     Returns
     -------
     ANEES statistic (i.e. :math:`\chi^2` above).
+
+    See also
+    --------
+    chi2_confidence_intervals
+        Confidence intervals for the ANEES test statistic.
+    non_credibility_index
+        An alternative calibration measure.
+
     """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
@@ -71,6 +82,12 @@ def non_credibility_index(
 ):
     r"""Compute the non-credibility index (NCI).
 
+    The NCI indicates whether an estimate is
+
+    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
+
+
     Parameters
     ----------
     approximate_solution :
@@ -85,6 +102,12 @@ def non_credibility_index(
     Returns
     -------
     NCI statistic.
+
+    See also
+    --------
+    average_normalized_estimation_error_squared
+        An alternative calibration measure.
+
     """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
@@ -93,7 +116,7 @@ def non_credibility_index(
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
-    intermediate = centered_mean @ sample_covariance_matrix
+    intermediate = centered_mean @ np.linalg.inv(sample_covariance_matrix)
     reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
     return 10 * (
         np.mean(np.log10(normalized_discrepancies))
@@ -110,7 +133,7 @@ def _compute_components(approximate_solution, locations, reference_solution):
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
-    intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
+    intermediate = np.einsum("nd,ndd->nd", centered_mean, np.linalg.inv(cov_matrices))
     final = np.einsum("nd,nd->n", intermediate, centered_mean)
     return final
 
