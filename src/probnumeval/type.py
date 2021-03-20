@@ -7,5 +7,6 @@ from probnum import filtsmooth
 
 __all__ = ["ApproximateSolutionType", "ReferenceSolutionType"]
 
-ApproximateSolutionType = filtsmooth.FiltSmoothPosterior
-ReferenceSolutionType = Callable[[np.ndarray], np.ndarray]
+ProbabilisticSolutionType = filtsmooth.FiltSmoothPosterior
+
+DeterministicSolutionType = Callable[[np.ndarray], np.ndarray]

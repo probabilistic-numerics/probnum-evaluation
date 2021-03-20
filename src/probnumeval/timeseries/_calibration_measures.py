@@ -12,7 +12,7 @@ from typing import Callable
 import numpy as np
 import scipy.stats
 
-from probnumeval.type import ApproximateSolutionType, ReferenceSolutionType
+from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [
     "average_normalized_estimation_error_squared",
@@ -22,8 +22,8 @@ __all__ = [
 
 
 def average_normalized_estimation_error_squared(
-    approximate_solution: ApproximateSolutionType,
-    reference_solution: ReferenceSolutionType,
+    approximate_solution: ProbabilisticSolutionType,
+    reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
 ):
     r"""Compute the average normalised estimation error squared.
@@ -67,8 +67,8 @@ def average_normalized_estimation_error_squared(
 
 
 def non_credibility_index(
-    approximate_solution: ApproximateSolutionType,
-    reference_solution: ReferenceSolutionType,
+    approximate_solution: ProbabilisticSolutionType,
+    reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
 ):
     r"""Compute the non-credibility index (NCI).
