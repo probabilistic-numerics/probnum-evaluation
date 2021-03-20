@@ -1,6 +1,5 @@
 """Tests for calibration measure functions."""
 import numpy as np
-import probnum as pn
 import pytest
 from probnum import filtsmooth, randvars, statespace
 
