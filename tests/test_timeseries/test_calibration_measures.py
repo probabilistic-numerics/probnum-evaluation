@@ -4,7 +4,7 @@ import probnum as pn
 import pytest
 
 from probnumeval.timeseries import (
-    average_normalised_estimation_error_squared,
+    average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
     non_credibility_index,
     non_credibility_index2,
@@ -43,8 +43,8 @@ def grid():
 
 
 def test_anees(kalpost, refsol, grid):
-
-    output = average_normalised_estimation_error_squared(kalpost, refsol, grid)
+    """The average normalized estimation error squared is a positive scalar."""
+    output = average_normalized_estimation_error_squared(kalpost, refsol, grid)
 
     assert np.isscalar(output)
     assert output > 0

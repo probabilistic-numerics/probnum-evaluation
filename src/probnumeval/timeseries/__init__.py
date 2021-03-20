@@ -10,7 +10,7 @@ https://arxiv.org/pdf/2012.08202.pdf
 
 
 from ._calibration_measures import (
-    average_normalised_estimation_error_squared,
+    average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
     non_credibility_index,
     non_credibility_index2,
@@ -27,7 +27,7 @@ __all__ = [
     "root_mean_square_error",
     "max_error",
     "final_time_error",
-    "average_normalised_estimation_error_squared",
+    "average_normalized_estimation_error_squared",
     "chi2_confidence_intervals",
     "non_credibility_index",
     "non_credibility_index2",

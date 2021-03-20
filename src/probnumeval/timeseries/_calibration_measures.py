@@ -14,7 +14,7 @@ import probnum as pn
 import scipy.stats
 
 __all__ = [
-    "average_normalised_estimation_error_squared",
+    "average_normalized_estimation_error_squared",
     "chi2_confidence_intervals",
     "non_credibility_index",
     "non_credibility_index2",
@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 
-def average_normalised_estimation_error_squared(
+def average_normalized_estimation_error_squared(
     approximate_solution: pn.filtsmooth.TimeSeriesPosterior,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
@@ -42,10 +42,11 @@ def average_normalised_estimation_error_squared(
     locations :
         Set of locations on which to evaluate the statistic.
     """
+    # Evaluate the posteriors.
     approximate_evaluation = approximate_solution(locations)
     reference_evaluation = reference_solution(locations)
     cov_matrices = approximate_evaluation.cov
-    centered_mean = approximate_evaluation.mean - reference_evaluation.mean
+    centered_mean = approximate_evaluation.mean - reference_evaluation
 
     intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
     final = np.einsum("nd,nd->n", intermediate, centered_mean)
