@@ -10,8 +10,8 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 from typing import Callable
 
 import numpy as np
-import probnum as pn
 import scipy.stats
+from probnum import filtsmooth
 
 __all__ = [
     "average_normalized_estimation_error_squared",
@@ -21,7 +21,7 @@ __all__ = [
 
 
 def average_normalized_estimation_error_squared(
-    approximate_solution: pn.filtsmooth.FiltSmoothPosterior,
+    approximate_solution: filtsmooth.FiltSmoothPosterior,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
@@ -59,29 +59,26 @@ def average_normalized_estimation_error_squared(
         approximate_solution, locations, reference_solution
     )
 
-    # Compute the test statistic.
-    intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
-    final = np.einsum("nd,nd->n", intermediate, centered_mean)
-    return final.mean(axis=0)
+    normalized_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, cov_matrices
+    )
+    return np.mean(normalized_discrepancies)
 
 
 def non_credibility_index(
-    approximate_solution: pn.filtsmooth.FiltSmoothPosterior,
+    approximate_solution: filtsmooth.FiltSmoothPosterior,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
     """Compute the non-credibility index."""
-    # Evaluate the posteriors.
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
     )
-    # Compute a baseline covariance (as a proxy for the true sample covariance).
-    baseline_cov = np.cov(centered_mean.T)
+    sample_covariance_matrix = np.cov(centered_mean.T)
 
     # Compute the test statistic
-    intermediate1 = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
-    final1 = np.einsum("nd,nd->n", intermediate1, centered_mean)
-    intermediate2 = centered_mean @ baseline_cov
+    final1 = _compute_normalized_discrepancies(centered_mean, cov_matrices)
+    intermediate2 = centered_mean @ sample_covariance_matrix
     final2 = np.einsum("nd,nd->n", intermediate2, centered_mean)
 
     return 10 * (np.log10(final1).mean(axis=0) - np.log10(final2).mean(axis=0))
@@ -93,6 +90,12 @@ def _compute_components(approximate_solution, locations, reference_solution):
     cov_matrices = approximate_evaluation.cov
     centered_mean = approximate_evaluation.mean - reference_evaluation
     return centered_mean, cov_matrices
+
+
+def _compute_normalized_discrepancies(centered_mean, cov_matrices):
+    intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
+    final = np.einsum("nd,nd->n", intermediate, centered_mean)
+    return final
 
 
 def chi2_confidence_intervals(dim, perc=0.99):

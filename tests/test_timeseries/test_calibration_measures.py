@@ -1,7 +1,7 @@
 """Tests for calibration measure functions."""
 import numpy as np
-import probnum as pn
 import pytest
+from probnum import filtsmooth, randvars, statespace
 
 from probnumeval.timeseries import (
     average_normalized_estimation_error_squared,
@@ -24,12 +24,12 @@ def kalpost():
     Used to test calibration measures
     """
     rvlist = [
-        pn.randvars.Normal(mean=i + np.arange(2, 4), cov=np.diag(np.arange(4, 6)))
+        randvars.Normal(mean=i + np.arange(2, 4), cov=np.diag(np.arange(4, 6)))
         for i in range(10)
     ]
     locs = np.linspace(0.0, 1.0, 10)
-    return pn.filtsmooth.FilteringPosterior(
-        states=rvlist, locations=locs, transition=pn.statespace.IBM(1, 1)
+    return filtsmooth.FilteringPosterior(
+        state_rvs=rvlist, locations=locs, transition=statespace.IBM(1, 1)
     )
 
 
