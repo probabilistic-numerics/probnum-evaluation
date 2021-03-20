@@ -7,8 +7,6 @@ Other source
 https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 """
 
-from typing import Callable
-
 import numpy as np
 import scipy.stats
 
