@@ -15,13 +15,13 @@ import scipy.stats
 
 __all__ = [
     "average_normalized_estimation_error_squared",
-    "chi2_confidence_intervals",
     "non_credibility_index",
+    "chi2_confidence_intervals",
 ]
 
 
 def average_normalized_estimation_error_squared(
-    approximate_solution: pn.filtsmooth.TimeSeriesPosterior,
+    approximate_solution: pn.filtsmooth.FiltSmoothPosterior,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
@@ -55,11 +55,9 @@ def average_normalized_estimation_error_squared(
     -------
     ANEES statistic (i.e. :math:`\chi^2` above).
     """
-    # Evaluate the posteriors.
-    approximate_evaluation = approximate_solution(locations)
-    reference_evaluation = reference_solution(locations)
-    cov_matrices = approximate_evaluation.cov
-    centered_mean = approximate_evaluation.mean - reference_evaluation
+    centered_mean, cov_matrices = _compute_components(
+        approximate_solution, locations, reference_solution
+    )
 
     # Compute the test statistic.
     intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
@@ -67,26 +65,16 @@ def average_normalized_estimation_error_squared(
     return final.mean(axis=0)
 
 
-def chi2_confidence_intervals(dim, perc=0.99):
-    """Easily access the confidence intervals of a chi-squared RV."""
-    delta = (1.0 - perc) / 2.0
-    lower = scipy.stats.chi2(df=dim).ppf(delta)
-    upper = scipy.stats.chi2(df=dim).ppf(1 - delta)
-    return lower, upper
-
-
 def non_credibility_index(
-    approximate_solution: pn.filtsmooth.TimeSeriesPosterior,
+    approximate_solution: pn.filtsmooth.FiltSmoothPosterior,
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
     """Compute the non-credibility index."""
     # Evaluate the posteriors.
-    approximate_evaluation = approximate_solution(locations)
-    reference_evaluation = reference_solution(locations)
-    cov_matrices = approximate_evaluation.cov
-    centered_mean = approximate_evaluation.mean - reference_evaluation
-
+    centered_mean, cov_matrices = _compute_components(
+        approximate_solution, locations, reference_solution
+    )
     # Compute a baseline covariance (as a proxy for the true sample covariance).
     baseline_cov = np.cov(centered_mean.T)
 
@@ -97,3 +85,19 @@ def non_credibility_index(
     final2 = np.einsum("nd,nd->n", intermediate2, centered_mean)
 
     return 10 * (np.log10(final1).mean(axis=0) - np.log10(final2).mean(axis=0))
+
+
+def _compute_components(approximate_solution, locations, reference_solution):
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    cov_matrices = approximate_evaluation.cov
+    centered_mean = approximate_evaluation.mean - reference_evaluation
+    return centered_mean, cov_matrices
+
+
+def chi2_confidence_intervals(dim, perc=0.99):
+    """Easily access the confidence intervals of a chi-squared RV."""
+    delta = (1.0 - perc) / 2.0
+    lower = scipy.stats.chi2(df=dim).ppf(delta)
+    upper = scipy.stats.chi2(df=dim).ppf(1 - delta)
+    return lower, upper
