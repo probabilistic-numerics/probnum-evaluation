@@ -69,7 +69,7 @@ def non_credibility_index(
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
-    """Compute the non-credibility index (NCI).
+    r"""Compute the non-credibility index (NCI).
 
     Parameters
     ----------
@@ -84,7 +84,7 @@ def non_credibility_index(
 
     Returns
     -------
-    NCI statistic (i.e. :math:`\chi^2` above).
+    NCI statistic.
     """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
