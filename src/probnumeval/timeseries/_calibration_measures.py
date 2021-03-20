@@ -69,18 +69,36 @@ def non_credibility_index(
     reference_solution: Callable[[np.ndarray], np.ndarray],
     locations: np.ndarray,
 ):
-    """Compute the non-credibility index."""
+    """Compute the non-credibility index (NCI).
+
+    Parameters
+    ----------
+    approximate_solution :
+        Approximate solution as returned by a Kalman filter or ODE solver. This must be a `FiltSmoothPosterior`.
+    reference_solution :
+        Reference solution. (This is not assumed to be a `TimeSeriesPosterior`, because
+        ideally this is the true solution of a problem; often, it is a reference solution
+        computed with a non-probabilistic algorithm.)
+    locations :
+        Set of locations on which to evaluate the statistic.
+
+    Returns
+    -------
+    NCI statistic (i.e. :math:`\chi^2` above).
+    """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
     )
     sample_covariance_matrix = np.cov(centered_mean.T)
-
-    # Compute the test statistic
-    final1 = _compute_normalized_discrepancies(centered_mean, cov_matrices)
-    intermediate2 = centered_mean @ sample_covariance_matrix
-    final2 = np.einsum("nd,nd->n", intermediate2, centered_mean)
-
-    return 10 * (np.log10(final1).mean(axis=0) - np.log10(final2).mean(axis=0))
+    normalized_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, cov_matrices
+    )
+    intermediate = centered_mean @ sample_covariance_matrix
+    reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
+    return 10 * (
+        np.mean(np.log10(normalized_discrepancies))
+        - np.mean(np.log10(reference_discrepancies))
+    )
 
 
 def _compute_components(approximate_solution, locations, reference_solution):
