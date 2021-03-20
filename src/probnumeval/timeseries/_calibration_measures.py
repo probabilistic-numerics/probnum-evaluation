@@ -48,6 +48,7 @@ def average_normalized_estimation_error_squared(
     cov_matrices = approximate_evaluation.cov
     centered_mean = approximate_evaluation.mean - reference_evaluation
 
+    # Compute the test statistic.
     intermediate = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
     final = np.einsum("nd,nd->n", intermediate, centered_mean)
     return final.mean(axis=0)
@@ -67,7 +68,22 @@ def non_credibility_index(
     locations: np.ndarray,
 ):
     """Compute the non-credibility index."""
-    raise NotImplementedError
+    # Evaluate the posteriors.
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    cov_matrices = approximate_evaluation.cov
+    centered_mean = approximate_evaluation.mean - reference_evaluation
+
+    # Compute a baseline covariance (as a proxy for the true sample covariance).
+    baseline_cov = np.cov(centered_mean.T)
+
+    # Compute the test statistic
+    intermediate1 = np.einsum("nd,ndd->nd", centered_mean, cov_matrices)
+    final1 = np.einsum("nd,nd->n", intermediate1, centered_mean)
+    intermediate2 = centered_mean @ baseline_cov
+    final2 = np.einsum("nd,nd->n", intermediate2, centered_mean)
+
+    return 10 * (np.log10(final1).mean(axis=0) - np.log10(final2).mean(axis=0))
 
 
 def non_credibility_index2(
