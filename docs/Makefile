@@ -7,7 +7,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = --color
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = probnum
+SPHINXPROJ    = probnum-evaluation
 SOURCEDIR     = source
 BUILDDIR      = _build
 AUTOMODAPIDIR = source/automod

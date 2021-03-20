@@ -211,7 +211,7 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "probnum.tex",
+        "probnumeval.tex",
         "ProbNum-Evaluation's Documentation",
         [author],
         "manual",
