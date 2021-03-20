@@ -56,6 +56,14 @@ def average_normalized_estimation_error_squared(
     Returns
     -------
     ANEES statistic (i.e. :math:`\chi^2` above).
+
+    See also
+    --------
+    chi2_confidence_intervals
+        Confidence intervals for the ANEES test statistic.
+    non_credibility_index
+        An alternative calibration measure.
+
     """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
@@ -93,6 +101,12 @@ def non_credibility_index(
     Returns
     -------
     NCI statistic.
+
+    See also
+    --------
+    average_normalized_estimation_error_squared
+        An alternative calibration measure.
+
     """
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
