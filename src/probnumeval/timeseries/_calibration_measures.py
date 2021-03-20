@@ -82,9 +82,9 @@ def non_credibility_index(
 ):
     r"""Compute the non-credibility index (NCI).
 
-    The estimate is
+    The NCI indicates whether an estimate is
 
-    - **Underconfident** if :math:` \text{NCI} < 0` holds. The estimated error is way larger than the actual error.
+    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
     - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
 
 
