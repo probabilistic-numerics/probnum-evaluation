@@ -34,7 +34,7 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    :maxdepth: 1
    :caption: Other
 
-   GitHub Repository <https://github.com/probabilistic-numerics/probnum>
+   GitHub Repository <https://github.com/probabilistic-numerics/probnum-evaluation>
    license
 
 
