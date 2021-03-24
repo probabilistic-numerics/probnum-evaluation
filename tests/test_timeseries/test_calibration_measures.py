@@ -29,7 +29,7 @@ def kalpost():
     ]
     locs = np.linspace(0.0, 1.0, 10)
     return filtsmooth.FilteringPosterior(
-        state_rvs=rvlist, locations=locs, transition=statespace.IBM(1, 1)
+        states=rvlist, locations=locs, transition=statespace.IBM(1, 1)
     )
 
 
