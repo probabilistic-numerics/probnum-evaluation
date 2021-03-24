@@ -7,6 +7,6 @@ from probnum import filtsmooth
 
 __all__ = ["ProbabilisticSolutionType", "DeterministicSolutionType"]
 
-ProbabilisticSolutionType = filtsmooth.FiltSmoothPosterior
+ProbabilisticSolutionType = filtsmooth.TimeSeriesPosterior
 
 DeterministicSolutionType = Callable[[np.ndarray], np.ndarray]
