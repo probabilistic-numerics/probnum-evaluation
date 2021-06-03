@@ -17,10 +17,17 @@ def test_cov_inversion_defaults():
 
 
 def test_context():
-    print(config.covariance_inversion)
+    assert config.covariance_inversion["strategy"] == "cholesky"
+    assert config.covariance_inversion["symmetrize"] == True
+    assert config.covariance_inversion["damping"] == 1e-14
+
     with config.CovarianceInversionContext(
         strategy="pinv", symmetrize=True, damping=0.0
     ):
-        print(config.covariance_inversion)
-    print(config.covariance_inversion)
-    assert False
+        assert config.covariance_inversion["strategy"] == "pinv"
+        assert config.covariance_inversion["symmetrize"] == True
+        assert config.covariance_inversion["damping"] == 0.0
+
+    assert config.covariance_inversion["strategy"] == "cholesky"
+    assert config.covariance_inversion["symmetrize"] == True
+    assert config.covariance_inversion["damping"] == 1e-14
