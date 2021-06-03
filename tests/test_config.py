@@ -1,7 +1,5 @@
 """Tests for configurations."""
 
-import pytest
-
 from probnumeval import config
 
 
@@ -14,14 +12,14 @@ def test_cov_inversion():
 def test_cov_inversion_defaults():
     """Check default values."""
     assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
-    assert config.COVARIANCE_INVERSION["symmetrize"] == True
+    assert config.COVARIANCE_INVERSION["symmetrize"]
     assert config.COVARIANCE_INVERSION["damping"] == 0.0
 
 
 def test_setter():
     """Check whether the setter function performs as expected."""
     assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
-    assert config.COVARIANCE_INVERSION["symmetrize"] == True
+    assert config.COVARIANCE_INVERSION["symmetrize"]
     assert config.COVARIANCE_INVERSION["damping"] == 0.0
 
     config.set_covariance_inversion_parameters(
@@ -29,7 +27,7 @@ def test_setter():
     )
 
     assert config.COVARIANCE_INVERSION["strategy"] == "inv"
-    assert config.COVARIANCE_INVERSION["symmetrize"] == False
+    assert not config.COVARIANCE_INVERSION["symmetrize"]
     assert config.COVARIANCE_INVERSION["damping"] == 10.0
 
     # Set back to previous values in order not to mess up the tests below.
@@ -41,16 +39,16 @@ def test_setter():
 def test_context():
     """Check whether the context manager does its job."""
     assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
-    assert config.COVARIANCE_INVERSION["symmetrize"] == True
+    assert config.COVARIANCE_INVERSION["symmetrize"]
     assert config.COVARIANCE_INVERSION["damping"] == 0.0
 
     with config.covariance_inversion_context(
-        strategy="pinv", symmetrize=True, damping=10.0
+        strategy="pinv", symmetrize=False, damping=10.0
     ):
         assert config.COVARIANCE_INVERSION["strategy"] == "pinv"
-        assert config.COVARIANCE_INVERSION["symmetrize"] == True
+        assert not config.COVARIANCE_INVERSION["symmetrize"]
         assert config.COVARIANCE_INVERSION["damping"] == 10.0
 
     assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
-    assert config.COVARIANCE_INVERSION["symmetrize"] == True
+    assert config.COVARIANCE_INVERSION["symmetrize"]
     assert config.COVARIANCE_INVERSION["damping"] == 0.0

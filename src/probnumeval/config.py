@@ -1,5 +1,6 @@
 """Configurations for all sorts of things."""
 from dataclasses import dataclass
+from typing import Dict, Optional
 
 __all__ = [
     "COVARIANCE_INVERSION",
@@ -17,7 +18,7 @@ COVARIANCE_INVERSION = dict(
 
 def set_covariance_inversion_parameters(strategy, symmetrize, damping):
     """Change parameters of covariance inversion."""
-
+    # pylint: disable=global-statement
     global COVARIANCE_INVERSION
     COVARIANCE_INVERSION = dict(
         strategy=strategy,
@@ -31,10 +32,10 @@ class covariance_inversion_context:
     """Context manager for specific parameters of covariance inversion."""
 
     strategy: str
-    symmetrize: bool = COVARIANCE_INVERSION["symmetrize"]
-    damping: float = COVARIANCE_INVERSION["damping"]
+    symmetrize: Optional[bool] = COVARIANCE_INVERSION["symmetrize"]
+    damping: Optional[float] = COVARIANCE_INVERSION["damping"]
 
-    _old_values: dict = None
+    _old_values: Optional[Dict] = None
 
     def __enter__(self):
         self._old_values = COVARIANCE_INVERSION.copy()
@@ -44,7 +45,7 @@ class covariance_inversion_context:
             damping=self.damping,
         )
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, *args, **kwargs):
         set_covariance_inversion_parameters(
             strategy=self._old_values["strategy"],
             symmetrize=self._old_values["symmetrize"],

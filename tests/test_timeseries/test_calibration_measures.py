@@ -48,6 +48,9 @@ def grid():
     return np.linspace(0.0, 1.0, 15)
 
 
+# pylint: disable=too-many-arguments
+
+
 @pytest.mark.parametrize("strategy", ["inv", "pinv", "solve", "cholesky"])
 @pytest.mark.parametrize("symmetrize", [True, False])
 @pytest.mark.parametrize("damping", [1.0, 0.0])

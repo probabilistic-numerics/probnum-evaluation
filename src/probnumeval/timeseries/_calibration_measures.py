@@ -157,12 +157,14 @@ def _compute_normalized_discrepancy(mean, cov):
     if config.COVARIANCE_INVERSION["strategy"] == "inv":
         return mean @ np.linalg.inv(cov) @ mean
     if config.COVARIANCE_INVERSION["strategy"] == "pinv":
-        return mean @ np.linalg.inv(cov) @ mean
+        return mean @ np.linalg.pinv(cov) @ mean
     if config.COVARIANCE_INVERSION["strategy"] == "solve":
         return mean @ np.linalg.solve(cov, mean)
     if config.COVARIANCE_INVERSION["strategy"] == "cholesky":
         L, lower = scipy.linalg.cho_factor(cov, lower=True)
         return mean @ scipy.linalg.cho_solve((L, lower), mean)
+
+    raise ValueError("Covariance inversion parameters are not known.")
 
 
 def chi2_confidence_intervals(dim, perc=0.99):
