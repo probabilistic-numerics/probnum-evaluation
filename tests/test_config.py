@@ -31,3 +31,17 @@ def test_context():
     assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
     assert config.COVARIANCE_INVERSION["symmetrize"] == True
     assert config.COVARIANCE_INVERSION["damping"] == 1e-14
+
+
+def test_setter():
+    assert config.COVARIANCE_INVERSION["strategy"] == "cholesky"
+    assert config.COVARIANCE_INVERSION["symmetrize"] == True
+    assert config.COVARIANCE_INVERSION["damping"] == 1e-14
+
+    config.set_covariance_inversion_parameters(
+        strategy="inv", symmetrize=False, damping=0.0
+    )
+
+    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
+    assert config.COVARIANCE_INVERSION["symmetrize"] == False
+    assert config.COVARIANCE_INVERSION["damping"] == 0.0

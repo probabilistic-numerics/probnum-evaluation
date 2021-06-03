@@ -12,6 +12,7 @@ COVARIANCE_INVERSION = dict(
     symmetrize=True,
     damping=1e-14,
 )
+"""Strategy parameters related to computing the inverse of a covariance matrix."""
 
 
 @dataclass
