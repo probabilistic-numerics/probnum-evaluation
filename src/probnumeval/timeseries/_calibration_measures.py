@@ -117,7 +117,7 @@ def non_credibility_index(
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
-    assert config.covariance_inversion["strategy"] == "inv"
+    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
     intermediate = centered_mean @ np.linalg.inv(sample_covariance_matrix)
     reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
     return 10 * (
