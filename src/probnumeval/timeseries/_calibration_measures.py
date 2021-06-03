@@ -8,6 +8,7 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 """
 
 import numpy as np
+import scipy.linalg
 import scipy.stats
 
 from probnumeval import config
@@ -146,9 +147,23 @@ def _compute_normalized_discrepancies(centered_mean, cov_matrices):
     )
 
 
-def _compute_normalized_discrepancy(m, C):
+def _compute_normalized_discrepancy(mean, cov):
     assert config.COVARIANCE_INVERSION["strategy"] == "inv"
-    return m @ np.linalg.inv(C) @ m
+
+    if config.COVARIANCE_INVERSION["symmetrize"]:
+        cov = 0.5 * (cov + cov.T)
+    if config.COVARIANCE_INVERSION["damping"] > 0.0:
+        cov += config.COVARIANCE_INVERSION["damping"] * np.eye(len(cov))
+
+    if config.COVARIANCE_INVERSION["strategy"] == "inv":
+        return mean @ np.linalg.inv(cov) @ mean
+    if config.COVARIANCE_INVERSION["strategy"] == "pinv":
+        return mean @ np.linalg.inv(cov) @ mean
+    if config.COVARIANCE_INVERSION["strategy"] == "solve":
+        return mean @ np.linalg.solve(cov, mean)
+    if config.COVARIANCE_INVERSION["strategy"] == "cholesky":
+        L = scipy.linalg.cho_factor(cov, lower=True)
+        return mean @ scipy.linalg.cho_solve((L, True), mean)
 
 
 def chi2_confidence_intervals(dim, perc=0.99):
