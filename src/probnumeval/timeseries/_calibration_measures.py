@@ -137,12 +137,18 @@ def _compute_components(approximate_solution, locations, reference_solution):
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
-    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
     print(centered_mean.shape, cov_matrices.shape)
+    return np.array(
+        [
+            _compute_normalized_discrepancy(m, C)
+            for (m, C) in zip(centered_mean, cov_matrices)
+        ]
+    )
 
-    intermediate = np.einsum("nd,ndd->nd", centered_mean, np.linalg.inv(cov_matrices))
-    final = np.einsum("nd,nd->n", intermediate, centered_mean)
-    return final
+
+def _compute_normalized_discrepancy(m, C):
+    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
+    return m @ np.linalg.inv(C) @ m
 
 
 def chi2_confidence_intervals(dim, perc=0.99):
