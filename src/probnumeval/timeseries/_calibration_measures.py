@@ -138,7 +138,6 @@ def _compute_components(approximate_solution, locations, reference_solution):
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
-    print(centered_mean.shape, cov_matrices.shape)
     return np.array(
         [
             _compute_normalized_discrepancy(m, C)
