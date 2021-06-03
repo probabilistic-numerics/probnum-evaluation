@@ -21,9 +21,7 @@ def test_context():
     assert config.covariance_inversion["symmetrize"] == True
     assert config.covariance_inversion["damping"] == 1e-14
 
-    with config.CovarianceInversionContext(
-        strategy="pinv", symmetrize=True, damping=0.0
-    ):
+    with config.precision_context(strategy="pinv", symmetrize=True, damping=0.0):
         assert config.covariance_inversion["strategy"] == "pinv"
         assert config.covariance_inversion["symmetrize"] == True
         assert config.covariance_inversion["damping"] == 0.0
