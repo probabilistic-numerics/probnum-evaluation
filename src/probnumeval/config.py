@@ -10,13 +10,25 @@ __all__ = [
 COVARIANCE_INVERSION = dict(
     strategy="cholesky",
     symmetrize=True,
-    damping=1e-14,
+    damping=0.0,
 )
 """Strategy parameters related to computing the inverse of a covariance matrix."""
 
 
+def set_covariance_inversion_parameters(strategy, symmetrize, damping):
+    """Change parameters of covariance inversion."""
+
+    global COVARIANCE_INVERSION
+    COVARIANCE_INVERSION = dict(
+        strategy=strategy,
+        symmetrize=symmetrize,
+        damping=damping,
+    )
+
+
 @dataclass
 class covariance_inversion_context:
+    """Context manager for specific parameters of covariance inversion."""
 
     strategy: str
     symmetrize: bool = COVARIANCE_INVERSION["symmetrize"]
@@ -38,12 +50,3 @@ class covariance_inversion_context:
             symmetrize=self._old_values["symmetrize"],
             damping=self._old_values["damping"],
         )
-
-
-def set_covariance_inversion_parameters(strategy, symmetrize, damping):
-    global COVARIANCE_INVERSION
-    COVARIANCE_INVERSION = dict(
-        strategy=strategy,
-        symmetrize=symmetrize,
-        damping=damping,
-    )
