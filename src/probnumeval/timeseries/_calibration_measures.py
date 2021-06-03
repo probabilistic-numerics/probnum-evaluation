@@ -10,6 +10,7 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 import numpy as np
 import scipy.stats
 
+from probnumeval import config
 from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [
@@ -116,6 +117,7 @@ def non_credibility_index(
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
+    assert config.covariance_inversion["strategy"] == "inv"
     intermediate = centered_mean @ np.linalg.inv(sample_covariance_matrix)
     reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
     return 10 * (

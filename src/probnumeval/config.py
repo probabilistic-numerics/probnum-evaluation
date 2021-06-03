@@ -1,7 +1,7 @@
 """Configurations for all sorts of things."""
 from dataclasses import dataclass
 
-__all__ = ["covariance_inversion", "precision_context"]
+__all__ = ["covariance_inversion", "covariance_inversion_context"]
 
 covariance_inversion = dict(
     strategy="cholesky",
@@ -11,11 +11,11 @@ covariance_inversion = dict(
 
 
 @dataclass
-class precision_context:
+class covariance_inversion_context:
 
     strategy: str
-    symmetrize: bool
-    damping: float
+    symmetrize: bool = covariance_inversion["symmetrize"]
+    damping: float = covariance_inversion["damping"]
 
     _old_values: dict = None
 

@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 from probnum import filtsmooth, randvars, statespace
 
+from probnumeval import config
 from probnumeval.timeseries import (
     average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
@@ -49,12 +50,14 @@ def grid():
 
 def test_anees(kalpost, refsol, grid):
     """The average normalized estimation error squared is a positive scalar."""
-    output = average_normalized_estimation_error_squared(kalpost, refsol, grid)
+    with config.covariance_inversion_context(strategy="inv"):
+        output = average_normalized_estimation_error_squared(kalpost, refsol, grid)
 
     assert np.isscalar(output)
     assert output > 0
 
 
 def test_nci(kalpost, refsol, grid):
-    output = non_credibility_index(kalpost, refsol, grid)
+    with config.covariance_inversion_context(strategy="inv"):
+        output = non_credibility_index(kalpost, refsol, grid)
     assert np.isscalar(output)
