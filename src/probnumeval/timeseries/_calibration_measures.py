@@ -148,7 +148,6 @@ def _compute_normalized_discrepancies(centered_mean, cov_matrices):
 
 
 def _compute_normalized_discrepancy(mean, cov):
-    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
 
     if config.COVARIANCE_INVERSION["symmetrize"]:
         cov = 0.5 * (cov + cov.T)
@@ -162,8 +161,8 @@ def _compute_normalized_discrepancy(mean, cov):
     if config.COVARIANCE_INVERSION["strategy"] == "solve":
         return mean @ np.linalg.solve(cov, mean)
     if config.COVARIANCE_INVERSION["strategy"] == "cholesky":
-        L = scipy.linalg.cho_factor(cov, lower=True)
-        return mean @ scipy.linalg.cho_solve((L, True), mean)
+        L, lower = scipy.linalg.cho_factor(cov, lower=True)
+        return mean @ scipy.linalg.cho_solve((L, lower), mean)
 
 
 def chi2_confidence_intervals(dim, perc=0.99):
