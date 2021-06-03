@@ -113,13 +113,15 @@ def non_credibility_index(
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
     )
-    sample_covariance_matrix = np.cov(centered_mean.T)
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
-    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
-    intermediate = centered_mean @ np.linalg.inv(sample_covariance_matrix)
-    reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
+    sample_covariance_matrix = np.tile(
+        np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
+    )
+    reference_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, sample_covariance_matrix
+    )
     return 10 * (
         np.mean(np.log10(normalized_discrepancies))
         - np.mean(np.log10(reference_discrepancies))
@@ -135,6 +137,9 @@ def _compute_components(approximate_solution, locations, reference_solution):
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
+    assert config.COVARIANCE_INVERSION["strategy"] == "inv"
+    print(centered_mean.shape, cov_matrices.shape)
+
     intermediate = np.einsum("nd,ndd->nd", centered_mean, np.linalg.inv(cov_matrices))
     final = np.einsum("nd,nd->n", intermediate, centered_mean)
     return final
