@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from probnumeval.timeseries import final_time_error, max_error, root_mean_square_error
+from probnumeval import timeseries
 
 
 @pytest.fixture
@@ -28,13 +28,12 @@ def evalgrid():
 
 
 def test_rmse(sol, ref_sol, evalgrid):
-    assert 0.0 < root_mean_square_error(sol, ref_sol, evalgrid) < 1e-8
+    assert 0.0 < timeseries.rmse(sol, ref_sol, evalgrid) < 1e-8
 
 
-def test_final_time_error(sol, ref_sol, evalgrid):
-    assert 0.0 < final_time_error(sol, ref_sol, evalgrid) < 1e-8
+def test_mae(sol, ref_sol, evalgrid):
+    assert 0.0 < timeseries.rmse(sol, ref_sol, evalgrid) < 1e-8
 
 
 def test_max_error(sol, ref_sol, evalgrid):
-    with pytest.raises(NotImplementedError):
-        max_error(sol, ref_sol, evalgrid)
+    assert 0.0 < timeseries.max_error(sol, ref_sol, evalgrid) < 1e-8

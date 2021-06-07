@@ -10,7 +10,16 @@ https://arxiv.org/pdf/2012.08202.pdf
 
 
 from ._calibration_measures import anees, nci
-from ._error_measures import final_time_error, max_error, root_mean_square_error
+from ._error_measures import (
+    mae,
+    max_error,
+    mean_error,
+    relative_mae,
+    relative_max_error,
+    relative_mean_error,
+    relative_rmse,
+    rmse,
+)
 from ._sample_analysis import (
     gaussianity_p_value,
     sample_reference_distance,
@@ -18,9 +27,14 @@ from ._sample_analysis import (
 )
 
 __all__ = [
-    "root_mean_square_error",
+    "rmse",
+    "relative_rmse",
+    "mae",
+    "relative_mae",
     "max_error",
-    "final_time_error",
+    "relative_max_error",
+    "mean_error",
+    "relative_mean_error",
     "anees",
     "nci",
     "gaussianity_p_value",

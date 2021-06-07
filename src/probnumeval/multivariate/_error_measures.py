@@ -68,8 +68,12 @@ def mean_error(
     reference_solution = np.asarray(reference_solution)
 
     diff = (approximate_solution - reference_solution).flatten()
+    error = np.linalg.norm(diff, ord=ord)
+
+    if np.isinf(ord):
+        return error
     normalization = reference_solution.size ** (1.0 / ord)
-    return np.linalg.norm(diff, ord=ord) / normalization
+    return error / normalization
 
 
 def relative_mean_error(
@@ -81,5 +85,10 @@ def relative_mean_error(
 
     diff = (approximate_solution - reference_solution) / reference_solution
     flat_diff = diff.flatten()
+    error = np.linalg.norm(flat_diff, ord=ord)
+
+    if np.isinf(ord):
+        return error
+
     normalization = reference_solution.size ** (1.0 / ord)
-    return np.linalg.norm(flat_diff, ord=ord) / normalization
+    return error / normalization

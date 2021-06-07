@@ -2,31 +2,47 @@
 
 import numpy as np
 
+from probnumeval import multivariate
 from probnumeval.type import DeterministicSolutionType
 
-__all__ = ["root_mean_square_error", "final_time_error", "max_error"]
+__all__ = [
+    "rmse",
+    "relative_rmse",
+    "mae",
+    "relative_mae",
+    "max_error",
+    "relative_max_error",
+    "mean_error",
+    "relative_mean_error",
+]
 
 
-def root_mean_square_error(
+def rmse(
     approximate_solution: DeterministicSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
 ):
-    """Compute an approximation of the L2 error on some grid."""
-    approx_sol = approximate_solution(locations)
-    ref_sol = reference_solution(locations)
-    return np.linalg.norm(approx_sol - ref_sol) / np.sqrt(ref_sol.size)
+    """Compute the root mean-square error."""
+    return mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=2,
+    )
 
 
-def final_time_error(
+def relative_rmse(
     approximate_solution: DeterministicSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
 ):
-    """Compute the accumulated error."""
-    out = approximate_solution(locations[-1])
-    ref = reference_solution(locations[-1])
-    return np.linalg.norm(out - ref) / np.sqrt(ref.size)
+    """Compute the root mean-square error."""
+    return relative_mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=2,
+    )
 
 
 def max_error(
@@ -34,5 +50,84 @@ def max_error(
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
 ):
-    """Compute an approximation of the L-infinity error on some grid."""
-    raise NotImplementedError
+    """Compute the root mean-square error."""
+    return mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=np.inf,
+    )
+
+
+def relative_max_error(
+    approximate_solution: DeterministicSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+):
+    """Compute the root mean-square error."""
+    return relative_mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=np.inf,
+    )
+
+
+def mae(
+    approximate_solution: DeterministicSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+):
+    """Compute the root mean-square error."""
+    return mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=1,
+    )
+
+
+def relative_mae(
+    approximate_solution: DeterministicSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+):
+    """Compute the root mean-square error."""
+    return relative_mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        locations=locations,
+        ord=1,
+    )
+
+
+def mean_error(
+    approximate_solution: DeterministicSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+    ord: int,
+):
+    """Compute the mean error."""
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    return multivariate.mean_error(
+        approximate_solution=approximate_evaluation,
+        reference_solution=reference_evaluation,
+        ord=ord,
+    )
+
+
+def relative_mean_error(
+    approximate_solution: DeterministicSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+    ord: int,
+):
+    """Compute the relative mean error."""
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    return multivariate.relative_mean_error(
+        approximate_solution=approximate_evaluation,
+        reference_solution=reference_evaluation,
+        ord=ord,
+    )
