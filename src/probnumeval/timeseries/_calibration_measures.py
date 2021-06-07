@@ -81,10 +81,9 @@ def non_credibility_index(
 ):
     r"""Compute the non-credibility index (NCI).
 
-    The NCI indicates whether an estimate is
-
-    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
-    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
+    The NCI indicates how credible an estimate is. The smaller this value, the better. The NCI of a perfectly
+    credible estimator is zero.
+    Unlike the inclination index, the NCI cannot determine over- and underconfidence.
 
 
     Parameters
@@ -123,11 +122,10 @@ def inclination_index(
 ):
     r"""Compute the inclination index (II).
 
-    The II indicates whether an estimate is
+    The II is a version of the NCI that additionally indicates whether an estimate is
 
-    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
-    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
-
+    - **Underconfident** if :math:`\text{II} < 0` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\text{II} > 0` holds. The estimated error is way smaller than the actual error.
 
     Parameters
     ----------

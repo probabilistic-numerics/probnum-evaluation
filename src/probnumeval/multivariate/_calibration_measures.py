@@ -133,8 +133,8 @@ def inclination_index(
 
     The II is a version of the NCI that additionally indicates whether an estimate is
 
-    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
-    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
+    - **Underconfident** if :math:`\text{II} < 0` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\text{II} > 0` holds. The estimated error is way smaller than the actual error.
 
     Parameters
     ----------
