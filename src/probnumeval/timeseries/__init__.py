@@ -20,11 +20,6 @@ from ._error_measures import (
     relative_rmse,
     rmse,
 )
-from ._sample_analysis import (
-    gaussianity_p_value,
-    sample_reference_distance,
-    sample_sample_distance,
-)
 
 __all__ = [
     "rmse",
@@ -37,7 +32,4 @@ __all__ = [
     "relative_mean_error",
     "anees",
     "nci",
-    "gaussianity_p_value",
-    "sample_reference_distance",
-    "sample_sample_distance",
 ]

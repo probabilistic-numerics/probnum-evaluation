@@ -2,11 +2,7 @@
 import numpy as np
 import pytest
 
-from probnumeval.timeseries import (
-    gaussianity_p_value,
-    sample_reference_distance,
-    sample_sample_distance,
-)
+from probnumeval import multivariate
 
 
 @pytest.fixture
@@ -21,16 +17,16 @@ def fake_reference():
 
 @pytest.mark.parametrize("p", [1, 2, np.inf])
 def test_sample_sample_distance(fake_samples, p):
-    ssdist = sample_sample_distance(fake_samples, p=p)
+    ssdist = multivariate.sample_sample_distance(fake_samples, p=p)
     np.testing.assert_allclose(ssdist.shape, (100,))
 
 
 @pytest.mark.parametrize("p", [1, 2, np.inf])
 def test_sample_reference_distance(fake_samples, fake_reference, p):
-    srdist = sample_reference_distance(fake_samples, fake_reference, p=p)
+    srdist = multivariate.sample_reference_distance(fake_samples, fake_reference, p=p)
     np.testing.assert_allclose(srdist.shape, (100,))
 
 
 def test_gaussianity_p_value():
     with pytest.raises(NotImplementedError):
-        gaussianity_p_value(None)
+        multivariate.gaussianity_p_value(None)
