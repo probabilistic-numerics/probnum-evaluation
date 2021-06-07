@@ -7,6 +7,7 @@ import pytest
 from probnumeval import multivariate
 
 all_shapes = pytest.mark.parametrize("shape", [1, (1,), (1, 1), 3, (3,), (3, 3)])
+"""The error measures should work for scalars, vectors, and matrices."""
 
 
 @pytest.fixture
