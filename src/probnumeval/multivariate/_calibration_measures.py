@@ -64,6 +64,10 @@ def anees(
     """
     cov_matrices = approximate_solution.cov
     centered_mean = approximate_solution.mean - reference_solution
+
+    centered_mean = np.atleast_2d(centered_mean)
+    cov_matrices = np.atleast_3d(cov_matrices)
+
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
@@ -103,6 +107,10 @@ def non_credibility_index(
     """
     cov_matrices = approximate_solution.cov
     centered_mean = approximate_solution.mean - reference_solution
+
+    centered_mean = np.atleast_2d(centered_mean)
+    cov_matrices = np.atleast_3d(cov_matrices)
+
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
@@ -156,6 +164,10 @@ def inclination_index(
     """
     cov_matrices = approximate_solution.cov
     centered_mean = approximate_solution.mean - reference_solution
+
+    centered_mean = np.atleast_2d(centered_mean)
+    cov_matrices = np.atleast_3d(cov_matrices)
+
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
