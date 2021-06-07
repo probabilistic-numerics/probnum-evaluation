@@ -62,8 +62,8 @@ def anees(
         An alternative calibration measure.
 
     """
-    cov_matrices = approximate_solution.cov
     centered_mean = approximate_solution.mean - reference_solution
+    cov_matrices = approximate_solution.cov
 
     centered_mean = np.atleast_2d(centered_mean)
     cov_matrices = np.atleast_3d(cov_matrices)
@@ -75,9 +75,7 @@ def anees(
 
 
 def non_credibility_index(
-    approximate_solution: Union[
-        randvars.Normal, _randomvariablelist._RandomVariableList
-    ],
+    approximate_solution: _randomvariablelist._RandomVariableList,
     reference_solution: np.ndarray,
 ):
     r"""Compute the non-credibility index (NCI).
@@ -105,8 +103,13 @@ def non_credibility_index(
         A version of the NCI that can figure out over- or underconfidence.
 
     """
-    cov_matrices = approximate_solution.cov
+    if not isinstance(approximate_solution, _randomvariablelist._RandomVariableList):
+        raise TypeError(
+            "The non-credibility index is only valid for a collection of random variables."
+        )
+
     centered_mean = approximate_solution.mean - reference_solution
+    cov_matrices = approximate_solution.cov
 
     centered_mean = np.atleast_2d(centered_mean)
     cov_matrices = np.atleast_3d(cov_matrices)
@@ -118,6 +121,7 @@ def non_credibility_index(
     sample_covariance_matrix = np.tile(
         np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
     )
+
     reference_discrepancies = _compute_normalized_discrepancies(
         centered_mean, sample_covariance_matrix
     )
@@ -162,11 +166,13 @@ def inclination_index(
     non_credibility_index
         Non-credibility index.
     """
+    if not isinstance(approximate_solution, _randomvariablelist._RandomVariableList):
+        raise TypeError(
+            "The inclination index is only valid for a collection of random variables."
+        )
+
     cov_matrices = approximate_solution.cov
     centered_mean = approximate_solution.mean - reference_solution
-
-    centered_mean = np.atleast_2d(centered_mean)
-    cov_matrices = np.atleast_3d(cov_matrices)
 
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
@@ -175,6 +181,7 @@ def inclination_index(
     sample_covariance_matrix = np.tile(
         np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
     )
+
     reference_discrepancies = _compute_normalized_discrepancies(
         centered_mean, sample_covariance_matrix
     )
