@@ -68,6 +68,7 @@ def test_non_credibility_index(kalpost, refsol, grid, strategy, symmetrize, damp
     ):
         output = timeseries.non_credibility_index(kalpost, refsol, grid)
     assert np.isscalar(output)
+    assert output > 0
 
 
 @all_strategies

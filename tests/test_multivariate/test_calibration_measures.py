@@ -64,6 +64,7 @@ def test_non_credibility_index(
             approximate_solution, reference_solution
         )
     assert np.isscalar(output)
+    assert output > 0
 
 
 @all_strategies
