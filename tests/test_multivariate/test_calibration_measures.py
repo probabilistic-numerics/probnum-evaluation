@@ -1,9 +1,9 @@
 """Tests for calibration measure functions."""
 import numpy as np
 import pytest
-from probnum import filtsmooth, randvars, statespace
+from probnum import _randomvariablelist, randvars
 
-from probnumeval import config, timeseries
+from probnumeval import config, multivariate
 
 all_strategies = pytest.mark.parametrize(
     "strategy", ["inv", "pinv", "solve", "cholesky"]
@@ -12,48 +12,40 @@ all_symmetries = pytest.mark.parametrize("symmetrize", [True, False])
 all_dampings = pytest.mark.parametrize("damping", [1.0, 0.0])
 
 
-@pytest.fixture
-def kalpost():
-    """Kalman posterior with irrelevant values.
+# The following pylint-exception is for the _randomvariablelist access:
+# pylint: disable=protected-access
 
-    Used to test calibration measures
-    """
+
+@pytest.fixture
+def approximate_solution():
+    """List of normals with irrelevant values."""
+
     rvlist = [
         randvars.Normal(mean=i + np.arange(2, 4), cov=np.diag(np.arange(4, 6)))
         for i in range(10)
     ]
-    locs = np.linspace(0.0, 1.0, 10)
-    return filtsmooth.FilteringPosterior(
-        states=rvlist, locations=locs, transition=statespace.IBM(1, 1)
-    )
+
+    return _randomvariablelist._RandomVariableList(rvlist)
 
 
 @pytest.fixture
-def refsol():
+def reference_solution():
     """Reference solution.
 
     Garbage values, but that does not matter.
     """
-    return lambda x: np.random.rand(*(x.shape + (2,)))
-
-
-@pytest.fixture
-def grid():
-    return np.linspace(0.0, 1.0, 15)
-
-
-# pylint: disable=too-many-arguments
+    return np.random.rand(10, 2)
 
 
 @all_strategies
 @all_symmetries
 @all_dampings
-def test_anees(kalpost, refsol, grid, strategy, symmetrize, damping):
+def test_anees(approximate_solution, reference_solution, strategy, symmetrize, damping):
     """The average normalized estimation error squared is a positive scalar."""
     with config.covariance_inversion_context(
         strategy=strategy, symmetrize=symmetrize, damping=damping
     ):
-        output = timeseries.anees(kalpost, refsol, grid)
+        output = multivariate.anees(approximate_solution, reference_solution)
 
     assert np.isscalar(output)
     assert output > 0
@@ -62,9 +54,9 @@ def test_anees(kalpost, refsol, grid, strategy, symmetrize, damping):
 @all_strategies
 @all_symmetries
 @all_dampings
-def test_nci(kalpost, refsol, grid, strategy, symmetrize, damping):
+def test_nci(approximate_solution, reference_solution, strategy, symmetrize, damping):
     with config.covariance_inversion_context(
         strategy=strategy, symmetrize=symmetrize, damping=damping
     ):
-        output = timeseries.nci(kalpost, refsol, grid)
+        output = multivariate.nci(approximate_solution, reference_solution)
     assert np.isscalar(output)

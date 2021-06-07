@@ -19,6 +19,7 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    :caption: API Documentation
 
    public_api/timeseries
+   public_api/multivariate
    public_api/visual
 
 
