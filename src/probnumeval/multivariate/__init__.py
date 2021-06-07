@@ -1,6 +1,6 @@
 """Error analysis and calibration analysis for finite-dimensional problems."""
 
-from ._calibration_measures import anees, nci
+from ._calibration_measures import anees, inclination_index, nci
 from ._error_measures import (
     mae,
     max_error,
@@ -20,6 +20,7 @@ from ._sample_analysis import (
 __all__ = [
     "anees",
     "nci",
+    "inclination_index",
     "rmse",
     "relative_rmse",
     "mae",

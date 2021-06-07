@@ -60,3 +60,18 @@ def test_nci(approximate_solution, reference_solution, strategy, symmetrize, dam
     ):
         output = multivariate.nci(approximate_solution, reference_solution)
     assert np.isscalar(output)
+
+
+@all_strategies
+@all_symmetries
+@all_dampings
+def test_inclination_index(
+    approximate_solution, reference_solution, strategy, symmetrize, damping
+):
+    with config.covariance_inversion_context(
+        strategy=strategy, symmetrize=symmetrize, damping=damping
+    ):
+        output = multivariate.inclination_index(
+            approximate_solution, reference_solution
+        )
+    assert np.isscalar(output)
