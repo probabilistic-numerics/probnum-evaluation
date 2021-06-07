@@ -11,7 +11,8 @@ from probnumeval import config
 
 __all__ = [
     "anees",
-    "nci",
+    "non_credibility_index",
+    "inclination_index",
 ]
 
 # The following pylint-exception is for the _randomvariablelist access:
@@ -57,7 +58,7 @@ def anees(
     --------
     chi2_confidence_intervals
         Confidence intervals for the ANEES test statistic.
-    nci
+    non_credibility_index
         An alternative calibration measure.
 
     """
@@ -69,7 +70,7 @@ def anees(
     return np.mean(normalized_discrepancies)
 
 
-def nci(
+def non_credibility_index(
     approximate_solution: Union[
         randvars.Normal, _randomvariablelist._RandomVariableList
     ],
@@ -150,7 +151,7 @@ def inclination_index(
     --------
     anees
         An alternative calibration measure.
-    nci
+    non_credibility_index
         Non-credibility index.
     """
     cov_matrices = approximate_solution.cov

@@ -14,7 +14,8 @@ from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionTyp
 
 __all__ = [
     "anees",
-    "nci",
+    "non_credibility_index",
+    "inclination_index",
 ]
 
 
@@ -73,7 +74,7 @@ def anees(
     )
 
 
-def nci(
+def non_credibility_index(
     approximate_solution: ProbabilisticSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
@@ -109,7 +110,50 @@ def nci(
     """
     approximate_evaluation = approximate_solution(locations)
     reference_evaluation = reference_solution(locations)
-    return multivariate.nci(
+    return multivariate.non_credibility_index(
+        approximate_solution=approximate_evaluation,
+        reference_solution=reference_evaluation,
+    )
+
+
+def inclination_index(
+    approximate_solution: ProbabilisticSolutionType,
+    reference_solution: DeterministicSolutionType,
+    locations: np.ndarray,
+):
+    r"""Compute the inclination index (II).
+
+    The II indicates whether an estimate is
+
+    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
+
+
+    Parameters
+    ----------
+    approximate_solution :
+        Approximate solution as returned by a Kalman filter or ODE solver. This must be a `FiltSmoothPosterior`.
+    reference_solution :
+        Reference solution. (This is not assumed to be a `TimeSeriesPosterior`, because
+        ideally this is the true solution of a problem; often, it is a reference solution
+        computed with a non-probabilistic algorithm.)
+    locations :
+        Set of locations on which to evaluate the statistic.
+
+    Returns
+    -------
+    NCI statistic.
+
+    See also
+    --------
+    anees
+        An alternative calibration measure.
+    non_credibility_index
+        An alternative calibration measure.
+    """
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    return multivariate.inclination_index(
         approximate_solution=approximate_evaluation,
         reference_solution=reference_evaluation,
     )

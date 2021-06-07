@@ -9,7 +9,7 @@ https://arxiv.org/pdf/2012.08202.pdf
 """
 
 
-from ._calibration_measures import anees, nci
+from ._calibration_measures import anees, inclination_index, non_credibility_index
 from ._error_measures import (
     mae,
     max_error,
@@ -31,5 +31,6 @@ __all__ = [
     "mean_error",
     "relative_mean_error",
     "anees",
-    "nci",
+    "non_credibility_index",
+    "inclination_index",
 ]
