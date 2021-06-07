@@ -1,6 +1,6 @@
 """Types."""
 
-from typing import Callable, Union
+from typing import Callable
 
 import numpy as np
 from probnum import filtsmooth

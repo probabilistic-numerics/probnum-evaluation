@@ -8,12 +8,14 @@ import scipy.stats
 from probnum import _randomvariablelist, randvars
 
 from probnumeval import config
-from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [
     "anees",
     "nci",
 ]
+
+# The following pylint-exception is for the _randomvariablelist access:
+# pylint: disable=protected-access
 
 
 def anees(

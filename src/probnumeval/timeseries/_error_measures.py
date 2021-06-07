@@ -27,7 +27,7 @@ def rmse(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=2,
+        p=2,
     )
 
 
@@ -41,7 +41,7 @@ def relative_rmse(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=2,
+        p=2,
     )
 
 
@@ -55,7 +55,7 @@ def max_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=np.inf,
+        p=np.inf,
     )
 
 
@@ -69,7 +69,7 @@ def relative_max_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=np.inf,
+        p=np.inf,
     )
 
 
@@ -83,7 +83,7 @@ def mae(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=1,
+        p=1,
     )
 
 
@@ -97,7 +97,7 @@ def relative_mae(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         locations=locations,
-        ord=1,
+        p=1,
     )
 
 
@@ -105,7 +105,7 @@ def mean_error(
     approximate_solution: DeterministicSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
-    ord: int,
+    p: int,
 ):
     """Compute the mean error."""
     approximate_evaluation = approximate_solution(locations)
@@ -113,7 +113,7 @@ def mean_error(
     return multivariate.mean_error(
         approximate_solution=approximate_evaluation,
         reference_solution=reference_evaluation,
-        ord=ord,
+        p=p,
     )
 
 
@@ -121,7 +121,7 @@ def relative_mean_error(
     approximate_solution: DeterministicSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
-    ord: int,
+    p: int,
 ):
     """Compute the relative mean error."""
     approximate_evaluation = approximate_solution(locations)
@@ -129,5 +129,5 @@ def relative_mean_error(
     return multivariate.relative_mean_error(
         approximate_solution=approximate_evaluation,
         reference_solution=reference_evaluation,
-        ord=ord,
+        p=p,
     )

@@ -8,10 +8,8 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 """
 
 import numpy as np
-import scipy.linalg
-import scipy.stats
 
-from probnumeval import config, multivariate
+from probnumeval import multivariate
 from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [

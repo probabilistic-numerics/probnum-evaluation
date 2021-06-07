@@ -42,7 +42,23 @@ def test_rmse(approximate_solution, reference_solution):
 
 
 @all_shapes
-def test_relative_mae(approximate_solution, reference_solution):
+def test_relative_rmse(approximate_solution, reference_solution):
     relative_rmse = multivariate.relative_rmse(approximate_solution, reference_solution)
     assert np.isscalar(relative_rmse)
     assert relative_rmse == pytest.approx(0.1, rel=1e-1)
+
+
+@all_shapes
+def test_max_error(approximate_solution, reference_solution):
+    max_error = multivariate.max_error(approximate_solution, reference_solution)
+    assert np.isscalar(max_error)
+    assert max_error == pytest.approx(0.1, rel=1e-1)
+
+
+@all_shapes
+def test_relative_max_error(approximate_solution, reference_solution):
+    relative_max_error = multivariate.relative_max_error(
+        approximate_solution, reference_solution
+    )
+    assert np.isscalar(relative_max_error)
+    assert relative_max_error == pytest.approx(0.1, rel=1e-1)

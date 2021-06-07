@@ -13,7 +13,6 @@ from ._error_measures import (
 )
 
 __all__ = [
-    "rmse",
     "anees",
     "nci",
     "rmse",

@@ -1,7 +1,7 @@
 """Tests for calibration measure functions."""
 import numpy as np
 import pytest
-from probnum import _randomvariablelist, filtsmooth, randvars, statespace
+from probnum import _randomvariablelist, randvars
 
 from probnumeval import config, multivariate
 
@@ -10,6 +10,10 @@ all_strategies = pytest.mark.parametrize(
 )
 all_symmetries = pytest.mark.parametrize("symmetrize", [True, False])
 all_dampings = pytest.mark.parametrize("damping", [1.0, 0.0])
+
+
+# The following pylint-exception is for the _randomvariablelist access:
+# pylint: disable=protected-access
 
 
 @pytest.fixture
