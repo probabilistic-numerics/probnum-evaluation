@@ -1,9 +1,11 @@
 """Uncertainty calibration measures."""
 
+from typing import Union
+
 import numpy as np
 import scipy.linalg
 import scipy.stats
-from probnum import randvars
+from probnum import _randomvariablelist, randvars
 
 from probnumeval import config
 from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
@@ -15,7 +17,9 @@ __all__ = [
 
 
 def anees(
-    approximate_solution: randvars.Normal,
+    approximate_solution: Union[
+        randvars.Normal, _randomvariablelist._RandomVariableList
+    ],
     reference_solution: np.ndarray,
 ):
     r"""Compute the average normalised estimation error squared.
@@ -64,7 +68,9 @@ def anees(
 
 
 def nci(
-    approximate_solution: randvars.Normal,
+    approximate_solution: Union[
+        randvars.Normal, _randomvariablelist._RandomVariableList
+    ],
     reference_solution: np.ndarray,
 ):
     r"""Compute the non-credibility index (NCI).
