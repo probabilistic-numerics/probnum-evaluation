@@ -6,7 +6,6 @@ from probnum import filtsmooth, randvars, statespace
 from probnumeval import config
 from probnumeval.timeseries import (
     average_normalized_estimation_error_squared,
-    chi2_confidence_intervals,
     non_credibility_index,
 )
 

@@ -11,7 +11,6 @@ https://arxiv.org/pdf/2012.08202.pdf
 
 from ._calibration_measures import (
     average_normalized_estimation_error_squared,
-    chi2_confidence_intervals,
     non_credibility_index,
 )
 from ._error_measures import final_time_error, max_error, root_mean_square_error
@@ -26,7 +25,6 @@ __all__ = [
     "max_error",
     "final_time_error",
     "average_normalized_estimation_error_squared",
-    "chi2_confidence_intervals",
     "non_credibility_index",
     "gaussianity_p_value",
     "sample_reference_distance",
