@@ -1,5 +1,7 @@
 """Utility functions for calibration analysis."""
 
+import scipy.stats
+
 
 def chi2_confidence_intervals(dim, perc=0.95):
     """Easily access the confidence intervals of a chi-squared RV."""

@@ -11,13 +11,6 @@ from probnumeval.timeseries import (
 )
 
 
-def test_chi2_confidence_intervals():
-    lower, upper = chi2_confidence_intervals(dim=2)
-
-    assert lower == pytest.approx(0.01, rel=1e-1)
-    assert upper == pytest.approx(10, rel=1e-1)
-
-
 @pytest.fixture
 def kalpost():
     """Kalman posterior with irrelevant values.
