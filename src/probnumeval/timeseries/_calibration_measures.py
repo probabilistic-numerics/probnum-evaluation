@@ -11,16 +11,16 @@ import numpy as np
 import scipy.linalg
 import scipy.stats
 
-from probnumeval import config
+from probnumeval import config, multivariate
 from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [
-    "average_normalized_estimation_error_squared",
-    "non_credibility_index",
+    "anees",
+    "nci",
 ]
 
 
-def average_normalized_estimation_error_squared(
+def anees(
     approximate_solution: ProbabilisticSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
@@ -62,21 +62,20 @@ def average_normalized_estimation_error_squared(
     --------
     chi2_confidence_intervals
         Confidence intervals for the ANEES test statistic.
-    non_credibility_index
+    nci
         An alternative calibration measure.
 
     """
-    centered_mean, cov_matrices = _compute_components(
-        approximate_solution, locations, reference_solution
+
+    approximate_evaluation = approximate_solution(locations)
+    reference_evaluation = reference_solution(locations)
+    return multivariate.anees(
+        approximate_solution=approximate_evaluation,
+        reference_solution=reference_evaluation,
     )
 
-    normalized_discrepancies = _compute_normalized_discrepancies(
-        centered_mean, cov_matrices
-    )
-    return np.mean(normalized_discrepancies)
 
-
-def non_credibility_index(
+def nci(
     approximate_solution: ProbabilisticSolutionType,
     reference_solution: DeterministicSolutionType,
     locations: np.ndarray,
@@ -106,60 +105,13 @@ def non_credibility_index(
 
     See also
     --------
-    average_normalized_estimation_error_squared
+    anees
         An alternative calibration measure.
 
     """
-    centered_mean, cov_matrices = _compute_components(
-        approximate_solution, locations, reference_solution
-    )
-    normalized_discrepancies = _compute_normalized_discrepancies(
-        centered_mean, cov_matrices
-    )
-    sample_covariance_matrix = np.tile(
-        np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
-    )
-    reference_discrepancies = _compute_normalized_discrepancies(
-        centered_mean, sample_covariance_matrix
-    )
-    return 10 * (
-        np.mean(np.log10(normalized_discrepancies))
-        - np.mean(np.log10(reference_discrepancies))
-    )
-
-
-def _compute_components(approximate_solution, locations, reference_solution):
     approximate_evaluation = approximate_solution(locations)
     reference_evaluation = reference_solution(locations)
-    cov_matrices = approximate_evaluation.cov
-    centered_mean = approximate_evaluation.mean - reference_evaluation
-    return centered_mean, cov_matrices
-
-
-def _compute_normalized_discrepancies(centered_mean, cov_matrices):
-    return np.array(
-        [
-            _compute_normalized_discrepancy(m, C)
-            for (m, C) in zip(centered_mean, cov_matrices)
-        ]
+    return multivariate.nci(
+        approximate_solution=approximate_evaluation,
+        reference_solution=reference_evaluation,
     )
-
-
-def _compute_normalized_discrepancy(mean, cov):
-
-    if config.COVARIANCE_INVERSION["symmetrize"]:
-        cov = 0.5 * (cov + cov.T)
-    if config.COVARIANCE_INVERSION["damping"] > 0.0:
-        cov += config.COVARIANCE_INVERSION["damping"] * np.eye(len(cov))
-
-    if config.COVARIANCE_INVERSION["strategy"] == "inv":
-        return mean @ np.linalg.inv(cov) @ mean
-    if config.COVARIANCE_INVERSION["strategy"] == "pinv":
-        return mean @ np.linalg.pinv(cov) @ mean
-    if config.COVARIANCE_INVERSION["strategy"] == "solve":
-        return mean @ np.linalg.solve(cov, mean)
-    if config.COVARIANCE_INVERSION["strategy"] == "cholesky":
-        L, lower = scipy.linalg.cho_factor(cov, lower=True)
-        return mean @ scipy.linalg.cho_solve((L, lower), mean)
-
-    raise ValueError("Covariance inversion parameters are not known.")

@@ -9,10 +9,7 @@ https://arxiv.org/pdf/2012.08202.pdf
 """
 
 
-from ._calibration_measures import (
-    average_normalized_estimation_error_squared,
-    non_credibility_index,
-)
+from ._calibration_measures import anees, nci
 from ._error_measures import final_time_error, max_error, root_mean_square_error
 from ._sample_analysis import (
     gaussianity_p_value,
@@ -24,8 +21,8 @@ __all__ = [
     "root_mean_square_error",
     "max_error",
     "final_time_error",
-    "average_normalized_estimation_error_squared",
-    "non_credibility_index",
+    "anees",
+    "nci",
     "gaussianity_p_value",
     "sample_reference_distance",
     "sample_sample_distance",
