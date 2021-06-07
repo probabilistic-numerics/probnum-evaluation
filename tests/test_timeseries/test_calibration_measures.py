@@ -62,9 +62,21 @@ def test_anees(kalpost, refsol, grid, strategy, symmetrize, damping):
 @all_strategies
 @all_symmetries
 @all_dampings
-def test_nci(kalpost, refsol, grid, strategy, symmetrize, damping):
+def test_non_credibility_index(kalpost, refsol, grid, strategy, symmetrize, damping):
     with config.covariance_inversion_context(
         strategy=strategy, symmetrize=symmetrize, damping=damping
     ):
-        output = timeseries.nci(kalpost, refsol, grid)
+        output = timeseries.non_credibility_index(kalpost, refsol, grid)
+    assert np.isscalar(output)
+    assert output > 0
+
+
+@all_strategies
+@all_symmetries
+@all_dampings
+def test_inclination_index(kalpost, refsol, grid, strategy, symmetrize, damping):
+    with config.covariance_inversion_context(
+        strategy=strategy, symmetrize=symmetrize, damping=damping
+    ):
+        output = timeseries.inclination_index(kalpost, refsol, grid)
     assert np.isscalar(output)

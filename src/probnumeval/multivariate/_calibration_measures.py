@@ -11,7 +11,8 @@ from probnumeval import config
 
 __all__ = [
     "anees",
-    "nci",
+    "non_credibility_index",
+    "inclination_index",
 ]
 
 # The following pylint-exception is for the _randomvariablelist access:
@@ -57,7 +58,7 @@ def anees(
     --------
     chi2_confidence_intervals
         Confidence intervals for the ANEES test statistic.
-    nci
+    non_credibility_index
         An alternative calibration measure.
 
     """
@@ -69,7 +70,7 @@ def anees(
     return np.mean(normalized_discrepancies)
 
 
-def nci(
+def non_credibility_index(
     approximate_solution: Union[
         randvars.Normal, _randomvariablelist._RandomVariableList
     ],
@@ -77,10 +78,9 @@ def nci(
 ):
     r"""Compute the non-credibility index (NCI).
 
-    The NCI indicates whether an estimate is
-
-    - **Underconfident** if :math:`\text{NCI} < 0` holds. The estimated error is way larger than the actual error.
-    - **Overconfident** if :math:`\text{NCI} > 0` holds. The estimated error is way smaller than the actual error.
+    The NCI indicates how credible an estimate is. The smaller this value, the better. The NCI of a perfectly
+    credible estimator is zero.
+    Unlike the inclination index, the NCI cannot determine over- and underconfidence.
 
     Parameters
     ----------
@@ -97,6 +97,8 @@ def nci(
     --------
     anees
         An alternative calibration measure.
+    inclination_index
+        A version of the NCI that can figure out over- or underconfidence.
 
     """
     cov_matrices = approximate_solution.cov
@@ -112,10 +114,63 @@ def nci(
         centered_mean, sample_covariance_matrix
     )
     nci = 10 * (
+        np.mean(
+            np.abs(
+                np.log10(normalized_discrepancies) - np.log10(reference_discrepancies)
+            )
+        )
+    )
+    return nci
+
+
+def inclination_index(
+    approximate_solution: Union[
+        randvars.Normal, _randomvariablelist._RandomVariableList
+    ],
+    reference_solution: np.ndarray,
+):
+    r"""Compute the inclination index (II).
+
+    The II is a version of the NCI that additionally indicates whether an estimate is
+
+    - **Underconfident** if :math:`\text{II} < 0` holds. The estimated error is way larger than the actual error.
+    - **Overconfident** if :math:`\text{II} > 0` holds. The estimated error is way smaller than the actual error.
+
+    Parameters
+    ----------
+    approximate_solution :
+        Approximate solution as returned by a (Gaussian) probabilistic numerical method.
+    reference_solution :
+        Reference solution. This is an array, because it must be a deterministic point-estimate.
+
+    Returns
+    -------
+    Inclination index.
+
+    See also
+    --------
+    anees
+        An alternative calibration measure.
+    non_credibility_index
+        Non-credibility index.
+    """
+    cov_matrices = approximate_solution.cov
+    centered_mean = approximate_solution.mean - reference_solution
+    normalized_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, cov_matrices
+    )
+
+    sample_covariance_matrix = np.tile(
+        np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
+    )
+    reference_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, sample_covariance_matrix
+    )
+    ii = 10 * (
         np.mean(np.log10(normalized_discrepancies))
         - np.mean(np.log10(reference_discrepancies))
     )
-    return nci
+    return ii
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
