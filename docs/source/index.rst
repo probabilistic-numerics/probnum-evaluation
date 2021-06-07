@@ -22,7 +22,6 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    public_api/multivariate
    public_api/visual
    public_api/config
-   public_api/type
 
 
 .. nbgallery::
