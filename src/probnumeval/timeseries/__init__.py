@@ -22,6 +22,9 @@ from ._error_measures import (
 )
 
 __all__ = [
+    "anees",
+    "non_credibility_index",
+    "inclination_index",
     "rmse",
     "relative_rmse",
     "mae",
@@ -30,7 +33,4 @@ __all__ = [
     "relative_max_error",
     "mean_error",
     "relative_mean_error",
-    "anees",
-    "non_credibility_index",
-    "inclination_index",
 ]
