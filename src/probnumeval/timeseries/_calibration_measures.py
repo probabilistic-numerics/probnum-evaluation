@@ -8,8 +8,10 @@ https://iopscience.iop.org/article/10.1088/1742-6596/659/1/012022/pdf
 """
 
 import numpy as np
+import scipy.linalg
 import scipy.stats
 
+from probnumeval import config
 from probnumeval.type import DeterministicSolutionType, ProbabilisticSolutionType
 
 __all__ = [
@@ -112,12 +114,15 @@ def non_credibility_index(
     centered_mean, cov_matrices = _compute_components(
         approximate_solution, locations, reference_solution
     )
-    sample_covariance_matrix = np.cov(centered_mean.T)
     normalized_discrepancies = _compute_normalized_discrepancies(
         centered_mean, cov_matrices
     )
-    intermediate = centered_mean @ np.linalg.inv(sample_covariance_matrix)
-    reference_discrepancies = np.einsum("nd,nd->n", intermediate, centered_mean)
+    sample_covariance_matrix = np.tile(
+        np.cov(centered_mean.T), reps=(len(centered_mean), 1, 1)
+    )
+    reference_discrepancies = _compute_normalized_discrepancies(
+        centered_mean, sample_covariance_matrix
+    )
     return 10 * (
         np.mean(np.log10(normalized_discrepancies))
         - np.mean(np.log10(reference_discrepancies))
@@ -133,9 +138,32 @@ def _compute_components(approximate_solution, locations, reference_solution):
 
 
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
-    intermediate = np.einsum("nd,ndd->nd", centered_mean, np.linalg.inv(cov_matrices))
-    final = np.einsum("nd,nd->n", intermediate, centered_mean)
-    return final
+    return np.array(
+        [
+            _compute_normalized_discrepancy(m, C)
+            for (m, C) in zip(centered_mean, cov_matrices)
+        ]
+    )
+
+
+def _compute_normalized_discrepancy(mean, cov):
+
+    if config.COVARIANCE_INVERSION["symmetrize"]:
+        cov = 0.5 * (cov + cov.T)
+    if config.COVARIANCE_INVERSION["damping"] > 0.0:
+        cov += config.COVARIANCE_INVERSION["damping"] * np.eye(len(cov))
+
+    if config.COVARIANCE_INVERSION["strategy"] == "inv":
+        return mean @ np.linalg.inv(cov) @ mean
+    if config.COVARIANCE_INVERSION["strategy"] == "pinv":
+        return mean @ np.linalg.pinv(cov) @ mean
+    if config.COVARIANCE_INVERSION["strategy"] == "solve":
+        return mean @ np.linalg.solve(cov, mean)
+    if config.COVARIANCE_INVERSION["strategy"] == "cholesky":
+        L, lower = scipy.linalg.cho_factor(cov, lower=True)
+        return mean @ scipy.linalg.cho_solve((L, lower), mean)
+
+    raise ValueError("Covariance inversion parameters are not known.")
 
 
 def chi2_confidence_intervals(dim, perc=0.99):

@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 from probnum import filtsmooth, randvars, statespace
 
+from probnumeval import config
 from probnumeval.timeseries import (
     average_normalized_estimation_error_squared,
     chi2_confidence_intervals,
@@ -47,14 +48,29 @@ def grid():
     return np.linspace(0.0, 1.0, 15)
 
 
-def test_anees(kalpost, refsol, grid):
+# pylint: disable=too-many-arguments
+
+
+@pytest.mark.parametrize("strategy", ["inv", "pinv", "solve", "cholesky"])
+@pytest.mark.parametrize("symmetrize", [True, False])
+@pytest.mark.parametrize("damping", [1.0, 0.0])
+def test_anees(kalpost, refsol, grid, strategy, symmetrize, damping):
     """The average normalized estimation error squared is a positive scalar."""
-    output = average_normalized_estimation_error_squared(kalpost, refsol, grid)
+    with config.covariance_inversion_context(
+        strategy=strategy, symmetrize=symmetrize, damping=damping
+    ):
+        output = average_normalized_estimation_error_squared(kalpost, refsol, grid)
 
     assert np.isscalar(output)
     assert output > 0
 
 
-def test_nci(kalpost, refsol, grid):
-    output = non_credibility_index(kalpost, refsol, grid)
+@pytest.mark.parametrize("strategy", ["inv", "pinv", "solve", "cholesky"])
+@pytest.mark.parametrize("symmetrize", [True, False])
+@pytest.mark.parametrize("damping", [1.0, 0.0])
+def test_nci(kalpost, refsol, grid, strategy, symmetrize, damping):
+    with config.covariance_inversion_context(
+        strategy=strategy, symmetrize=symmetrize, damping=damping
+    ):
+        output = non_credibility_index(kalpost, refsol, grid)
     assert np.isscalar(output)
