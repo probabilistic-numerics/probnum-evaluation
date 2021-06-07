@@ -30,7 +30,7 @@ def relative_rmse(
     approximate_solution: np.ndarray,
     reference_solution: np.ndarray,
 ):
-    """Compute the root mean-square error."""
+    """Compute the relative root mean-square error."""
     return relative_mean_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
@@ -42,7 +42,7 @@ def max_error(
     approximate_solution: np.ndarray,
     reference_solution: np.ndarray,
 ):
-    """Compute the root mean-square error."""
+    """Compute the maximum error."""
     return mean_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
@@ -54,7 +54,7 @@ def relative_max_error(
     approximate_solution: np.ndarray,
     reference_solution: np.ndarray,
 ):
-    """Compute the root mean-square error."""
+    """Compute the relative maximum error."""
     return relative_mean_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
@@ -66,7 +66,7 @@ def mae(
     approximate_solution: np.ndarray,
     reference_solution: np.ndarray,
 ):
-    """Compute the root mean-square error."""
+    """Compute the mean absolute error."""
     return mean_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
@@ -78,7 +78,7 @@ def relative_mae(
     approximate_solution: np.ndarray,
     reference_solution: np.ndarray,
 ):
-    """Compute the root mean-square error."""
+    """Compute the relative mean absolute error."""
     return relative_mean_error(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,

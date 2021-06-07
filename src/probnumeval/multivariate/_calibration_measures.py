@@ -116,14 +116,6 @@ def nci(
     return nci
 
 
-def _compute_components(approximate_solution, locations, reference_solution):
-    approximate_evaluation = approximate_solution(locations)
-    reference_evaluation = reference_solution(locations)
-    cov_matrices = approximate_evaluation.cov
-    centered_mean = approximate_evaluation.mean - reference_evaluation
-    return centered_mean, cov_matrices
-
-
 def _compute_normalized_discrepancies(centered_mean, cov_matrices):
     return np.array(
         [
