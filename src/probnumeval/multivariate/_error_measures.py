@@ -9,6 +9,8 @@ __all__ = [
     "relative_mae",
     "mean_error",
     "relative_mean_error",
+    "max_error",
+    "relative_max_error",
 ]
 
 
@@ -33,6 +35,30 @@ def relative_rmse(
         approximate_solution=approximate_solution,
         reference_solution=reference_solution,
         ord=2,
+    )
+
+
+def max_error(
+    approximate_solution: np.ndarray,
+    reference_solution: np.ndarray,
+):
+    """Compute the root mean-square error."""
+    return mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        ord=np.inf,
+    )
+
+
+def relative_max_error(
+    approximate_solution: np.ndarray,
+    reference_solution: np.ndarray,
+):
+    """Compute the root mean-square error."""
+    return relative_mean_error(
+        approximate_solution=approximate_solution,
+        reference_solution=reference_solution,
+        ord=np.inf,
     )
 
 
