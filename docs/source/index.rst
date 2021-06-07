@@ -27,6 +27,7 @@ For guidelines how to contribute to ProbNum-Evaluation, please refer to the ` Pr
    :maxdepth: 1
    :caption: Tutorials
 
+   tutorials/measure_error_and_calibration
    tutorials/animate_gaussian_distributions
    tutorials/animate_gauss_markov_posterior
 
